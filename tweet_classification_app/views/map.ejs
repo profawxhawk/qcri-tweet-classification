@@ -124,20 +124,6 @@ for (i = 0; i < acc.length; i++) {
         el.value = "Start";
 
         }
-
-    //     function Action2(el) {
-    //       // var flag= true;
-    //         windoww.close();
-          
-
-
-    //         if ( el.value === "Stop" )
-    //     el.value = "Start";
-    // else
-    //     el.value = "Stop";
-
-    //     }
-
     </script>
 
         
@@ -506,11 +492,6 @@ else {
 }
 }           
 }
-
-
-
-// code //
-
 if(resData1.sim.length!=0){
 let createtime2=resData1.sim[0].createtime;
 let vep1=document.getElementById("dope").innerText;
@@ -519,9 +500,6 @@ var res1 = vep1.replace(vep1.substring(n1+3), createtime2);
 document.getElementById("dope").innerText = res1;
 console.log(res1);
 }
-
-// end of code //
-
   });
 },5000);
 }
@@ -564,18 +542,14 @@ console.log(res1);
         </div>
          
           <script>
-             // var text = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0'  + '<%=sails.config.myconf.filter1 %>';
           dyrender('severitymaster','severity', '');
           console.log("number of Severity " + document.getElementById("something1").innerText);
         </script>
         <% for(var i=2; i<(respose[1])+2; i++){ %>
           <script>
-
-            
             var slc1=document.getElementById('severity');
             var ele='<%=respose[i]%>';
             var checkbox = document.createElement("input");
-            // checkbox.id('squaredTwo');
             checkbox.type = "checkbox";
             checkbox.align= "left";
             checkbox.className ="severity";
@@ -614,7 +588,6 @@ console.log(res1);
           <%= respose[i] %>
         </div>
             <script >
-               // var text = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0'  + '<%=sails.config.myconf.filter2 %>';
                 dyrender('aidrmaster','aidr', '');
                 console.log("number of AIDR label " + document.getElementById("something2").innerText);
         </script>
@@ -652,8 +625,6 @@ console.log(res1);
         </div>
 
          <script>
-        
-          // var text = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0'  + '<%=sails.config.myconf.filter3 %>';
            dyrender('sentimentmaster','sentiment','');
            console.log("number of Sentiment " + document.getElementById("something3").innerText);
         </script>
@@ -691,8 +662,6 @@ console.log(res1);
         </div>
           
   <script>
-
-    // var text = '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0'  + '<%=sails.config.myconf.filter4 %>';
          dyrender('imagemaster','image','');
          console.log("number of Image " + document.getElementById("something4").innerText);
         </script>
@@ -814,8 +783,6 @@ console.log(res1);
                 console.log(document.getElementById("dep"))
                 document.getElementById("dope").innerText = '/tweets/filteror?q1='+query1+'&q2='+query2+'&q3='+query3+'&q4='+query4+'&q5='+1+'&q7='+1+'&q9='+document.getElementById("dep").innerHTML+'&q10='+document.getElementById("demon").innerHTML+'&q11='+document.getElementById("demon1").innerHTML+'&q12='+document.getElementById("demon2").innerHTML+'&q8='+'xyz';
                 get1(qu,0);
-
-  
     }    
          </script>
          <script>
