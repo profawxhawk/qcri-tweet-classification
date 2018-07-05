@@ -262,31 +262,13 @@ Tweets.native(function(err, prodCollection) {
 
         var str = JSON.stringify(results[0]);
         str= str.slice(8,-2);
-
-        // var str2 = JSON.stringify(results[1]);
-        // str2= str.slice(8,-2);
-        // console.log("latitude lloks like: " + str2);
-
-    
         var array = str.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/g);
-
-
-        // console.log("image_damage_class-->" + array[2].slice(22, -1));
-        // console.log("image_physical_location-->" + array[3].slice(27, -1));
         console.log("tweet_text-->" + array[0].slice(14, -1));
         console.log("latitude--> "+ array[1].slice(11)); // actually longitude
         console.log("longitude--> "+ array[2].slice(12)); // actually latitude
-        // console.log("sentiment-->" + array[5].slice(13, -1));
-        // console.log("aidr_class_label-->" + array[6].slice(20, -1));
-
-        // sails.config.myconf.damage=array[2].slice(22, -1);
-        // sails.config.myconf.location=array[3].slice(27, -1);
         sails.config.myconf.tweet=array[0].slice(14, -1);
         sails.config.myconf.long=array[2].slice(12);
         sails.config.myconf.lat=array[1].slice(11);
-        // sails.config.myconf.senti=array[5].slice(13, -1);
-        // sails.config.myconf.classlabel=array[6].slice(20, -1);
-       
        return str;
       });
   }
