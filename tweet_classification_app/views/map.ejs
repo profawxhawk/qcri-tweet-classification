@@ -6,25 +6,28 @@
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1">
      
-<!-- My stylesheer -->
+<!-- My stylesheet -->
 <link rel="stylesheet" href="/style.css" type="text/css">
-     <!-- Markers -->
+     <!-- Markers stylesheet-->
       <link rel="stylesheet" type="text/css" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
       <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
       <script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
       <script type="text/javascript" src="/js/dependencies/sails.io.js"></script>
-      <!-- Enf of Markers -->
+
     </head>
     <body>
           <div id="myNav" class="overlay">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <%console.log(respose[respose.length-1])%>
+     <!-- The key is an image,so depending on the collection code we are displaying the right key -->
+    <!-- You can change this so that the markers image are constant, and you just change the text boxes -->
     <%if (sails.config.myconf.collectioncode == "170826213907_hurricane_harvey_2017") {%>
     <%sails.config.myconf.image = "/harveykey.png";%>
     <% }%>
     <%if (sails.config.myconf.collectioncode == "3345134690_Queensland_flood_2013") {%>
     <%sails.config.myconf.image = "/queenslandkey.png";%>
     <% }%>
+     <!-- Start button enables a link so that the simulator begins, next to the button the key is displayed -->
    <center><button onclick="if (this.value == 'Start') return Action(this);" type="buttons" value="Start" style=" margin-top: 10px; position: absolute; left: 10%; top: 40; width: 65px;" id="allbus" class="btn btn-success"> Start
   </button><img src='<%=sails.config.myconf.image %>'style="margin-top: 10px; position: absolute; left: 36%; top: 40; width: 140px;"></center>
   <br>
@@ -32,30 +35,25 @@
   <br>
   <br>
   <br>
+  <!-- Four categories are coded here, and it is user defined in the myconf file and is displayed here -->
   <div id="hello">
   <button class="accordion"><%=sails.config.myconf.filter1 %></button>
   <div class="overlay-content"   align="left" id="severitymaster"></div>
-  <div class="slidecontainer">
- <input type="range" min="0" max="1" step="0.0001" value="0" class="slider" id="myRange">
- <p class="paralign"> <span id="demon" class="smallbutton"></span></p>
- </div>
+  <div class="slidecontainer" id="slidecontainer1">
+  </div>
   </div>
 
   <div id="hello2">
   <button class="accordion"><%=sails.config.myconf.filter2 %></button>
   <div class="overlay-content"  align="left"  id="aidrmaster"></div>
-  <div class="slidecontainer">
- <input type="range" min="0" max="1" step="0.0001" value="0" class="slider" id="myRange1">
- <p class="paralign"> <span id="demon1" class="smallbutton"></span></p>
+  <div class="slidecontainer" id="slidecontainer2">
  </div>
   </div>
 
   <div id="hello3">
   <button class="accordion"><%=sails.config.myconf.filter3 %></button>
   <div class="overlay-content"  align="left"  id="sentimentmaster"></div>
-  <div class="slidecontainer">
- <input type="range" min="0" max="1" step="0.0001" value="0" class="slider" id="myRange2">
- <p class="paralign"> <span id="demon2" class="smallbutton"></span></p>
+  <div class="slidecontainer" id="slidecontainer3">
  </div>
   </div>
   <div id="hello4">
@@ -63,36 +61,8 @@
   <div class="overlay-content"  align="left"  id="imagemaster"></div>
   </div>
 
-</div>   
-<script>
-var slider = document.getElementById("myRange");
-var output = document.getElementById("demon");
-output.innerHTML = slider.value;
-slider.oninput = function() {
- output.innerHTML = this.value;
-}
-slider.onmouseup=function(){
- task(event);
-}
-var slider1 = document.getElementById("myRange1");
-var output1 = document.getElementById("demon1");
-output1.innerHTML = slider1.value;
-slider1.oninput = function() {
- output1.innerHTML = this.value;
-}
-slider1.onmouseup=function(){
- task(event);
-}
-var slider2 = document.getElementById("myRange2");
-var output2 = document.getElementById("demon2");
-output2.innerHTML = slider2.value;
-slider2.oninput = function() {
- output2.innerHTML = this.value;
-}
-slider2.onmouseup=function(){
- task(event);
-}
-</script>
+</div>  
+<!-- Accrodian are the collapsable and expandable categories in green -->
 <script>
 var acc = document.getElementsByClassName("accordion");
 var i;
@@ -109,6 +79,7 @@ for (i = 0; i < acc.length; i++) {
     });
 }
 </script> 
+<!-- Start button enables the simulator -->
 <script>
     var windoww= "";
 
@@ -126,18 +97,18 @@ for (i = 0; i < acc.length; i++) {
         }
     </script>
 
-        
-            <div id="map">
+        <!-- This displays the map -->
+            <div id="map"> 
               
  <br>
     <br>
     <br>
     <br>
 
-    <div class="btn-group" style="z-index: 401"> <!-- Use 401 to be between map and controls -->
-    <!-- <button type="buttons" value ="Start" id="allbus" class="btn btn-success" onclick="Action()"></button> -->
-
-  <span  id="SpanHeader" class="CourseHeader"  onclick="openNav()">&#9776; &nbsp </span> 
+    <div class="btn-group" style="z-index: 401"> <!-- Use 401 to be between map and controls-->
+<!-- This is the three lines that opens the filters -->
+  <span  id="SpanHeader" class="CourseHeader"  onclick="openNav()">&#9776; &nbsp </span>  
+  <!-- Click me image next to it -->
   <img src="/click.png" id="SpanHeader2" class="CourseHeader2" > 
 </div>
 
@@ -151,6 +122,7 @@ for (i = 0; i < acc.length; i++) {
   <div id="dep" hidden="true"><%=respose[0]%></div>
   <div id="dope" hidden="true"></div>
 
+<!-- This takes the labels from the database which have underscores and removes them, and capitalizes the first character -->
   <script>
     String.prototype.replaceAt=function(index, replacement) {
     return this.substr(0, index) + replacement+ this.slice(index+1)
@@ -168,13 +140,14 @@ function removeunwanted(age) {
     }
     return age;
 }
+// open the navigation bar
 function openNav() {
 $("#SpanHeader").toggleClass("Black");
 $("#SpanHeader2").toggleClass("Black");
     document.getElementById("myNav").style.width = "30%";
 
 }
-
+// close the navigation bar
 function closeNav() {
   $("#SpanHeader").removeClass("Black");
   $("#SpanHeader2").toggleClass("Black");
@@ -184,13 +157,17 @@ function closeNav() {
 
   <script> 
      console.log(document.getElementById("dep").innerHTML);
+     // this is required for the map to be displayed
     var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
       '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
       'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+  // street and satellite view from mapbox
   var streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr}),
     satellite  = L.tileLayer(mbUrl, {id: 'mapbox.streets-satellite',   attribution: mbAttr});
+    // layergroup is a constrctor for storing the markers
  var markerGroup = L.layerGroup();
+ // setting the map with diffrent properties + different layers
   var map = L.map( 'map', {
     center: [20.0, 5.0],
     minZoom: 2,
@@ -209,7 +186,7 @@ function closeNav() {
     "Markers": markerGroup
   };
    L.control.layers(baseLayers, overlays).addTo(map);
-  // Green color
+  // Green  marker
   var myIcon = L.icon({
     iconUrl: '/images/pin24.png',
     iconRetinaUrl:'/images/pin48.png',
@@ -217,7 +194,7 @@ function closeNav() {
     iconAnchor: [9, 21],
     popupAnchor: [0, -14]
   });
-  // Yellow color
+  // Yellow color marker
   var myIcon2 = L.icon({
     iconUrl: '/images/pin24(2).png',
     iconRetinaUrl:'/images/pin48(2).png',
@@ -225,7 +202,7 @@ function closeNav() {
     iconAnchor: [9, 21],
     popupAnchor: [0, -14]
   });
-  // Red color
+  // Red color marker
   var myIcon3 = L.icon({
     iconUrl: '/images/pin24(3).png',
     iconRetinaUrl:'/images/pin48(3).png',
@@ -233,6 +210,7 @@ function closeNav() {
     iconAnchor: [9, 21],
     popupAnchor: [0, -14]
   });
+  // connecting to socket.io to get data from sim
 var outer=io.sails.connect();
 var inner=io.sails.connect();
 function get1(qu,flag){
@@ -251,6 +229,7 @@ outer.get(qu, function (resData, jwres){
   let aidr= resData.sim[j].aidr_class_label; 
   let sentiment= resData.sim[j].sentiment; 
   let severity= resData.sim[j].image_damage_class; 
+  // this takes the url part fo tweet text and makes it a hyperlink
 function linkify(text) {
  var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
  return text.replace(urlRegex, function(url) {
@@ -261,25 +240,30 @@ var a=linkify(text1);
 var senti='';
 var aid='';
 aid=removeunwanted(aidr);
+// in the database, the records that are null for severity, we set it to unknown, and those which say None we set it to Zero
 if(severity== ''){
 severity="Unkown";
 }
 if(severity== 'None'){
 severity="Zero";
 }
+
 var popup = L.popup();
+// popoup for markers with an image
 function onMapClick() {
     popup
         .setLatLng([long, lati])
         .setContent('<p>' + a + '</p>' + "<a target='" + '_blank' + "' href='" +  img  + "'><img class='size'  src='" + img  + "'/></a>" + '<p>' +'<b>' + "<%= sails.config.myconf.displayaidr %>" +'</b>'+ aid+ '</p>'+ '<p>' +'<b>'+ "<%= sails.config.myconf.displaysentiment %>" +'</b>'+  sentiment  + '</p>'+'<p>' +'<b>'+ "<%= sails.config.myconf.displayseverity %>" +'</b>'+  severity  + '</p>')
         .addTo(map);
 }
+// popoup for markers without an image
 function onMapClick2() {
     popup
         .setLatLng([long, lati])
         .setContent('<p>' + a + '</p>'  + '<p>' +'<b>'+ "<%= sails.config.myconf.displayaidr %>" +'</b>'+ aid+ '</p>'+ '<p>' +'<b>'+ "<%= sails.config.myconf.displaysentiment %>" +'</b>'+  sentiment  + '</p>'+'<p>' +'<b>'+ "<%= sails.config.myconf.displayseverity %>" +'</b>'+  severity  + '</p>')
         .addTo(map);
 }
+// for each severity there are two cases- with and without image. Here we are just creating the marker and adding it to a markerGroup
   if (severity== ('None')){
      if(img==''){
   little = new L.marker([long,lati], {icon: myIcon} ).addTo(markerGroup); 
@@ -361,6 +345,7 @@ else {
 }
 }      
  }
+ // this is to ensure the querying is done for new markers only
 if(resData.sim.length!=0){
 let createtime1=resData.sim[0].createtime;
 let vep=document.getElementById("dope").innerText;
@@ -388,6 +373,7 @@ function(){
             let sentimenti= resData1.sim[i].sentiment 
             let severityi= resData1.sim[i].image_damage_class
             let txt1= text1i;
+            // same as linkify function
             function linkify1(text) {
              var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
              return text.replace(urlRegex, function(url) {
@@ -399,18 +385,21 @@ function(){
 let aidi='';
 aidi=removeunwanted(aidri);
 var popup1 = L.popup();
+// same as onMapClick function
 function onMapClick1() {
     popup1
         .setLatLng([longi, latii])
         .setContent('<p>' + ai + '</p>' + "<a target='" + '_blank' + "' href='" +  imgi  + "'><img class='size'  src='" + imgi  + "'/></a>" + '<p>' +'<b>'+ "<%= sails.config.myconf.displayaidr %>" +'</b>'+ aidi+ '</p>'+ '<p>' +'<b>'+ "<%= sails.config.myconf.displaysentiment %>" +'</b>'+  sentimenti  + '</p>'+'<p>' +'<b>'+ "<%= sails.config.myconf.displayseverity %>" +'</b>'+  severityi  + '</p>')
         .addTo(map);
 }
+// same as onMapClick2 function
 function onMapClick21() {
     popup1
         .setLatLng([longi, latii])
         .setContent('<p>' + ai + '</p>'  + '<p>' +'<b>'+  "<%= sails.config.myconf.displayaidr %>" +'</b>' + aidi+ '</p>'+ '<p>' +'<b>'+ "<%= sails.config.myconf.displaysentiment %>" +'</b>'+  sentimenti  + '</p>'+'<p>' +'<b>'+ "<%= sails.config.myconf.displayseverity %>" +'</b>'+  severityi  + '</p>')
         .addTo(map);
 }
+// same process here with markeres created for image and without image
 if (severityi== ('None')){
      if(imgi==''){
   littlei = new L.marker([longi,latii], {icon: myIcon} ).addTo(markerGroup); 
@@ -492,6 +481,7 @@ else {
 }
 }           
 }
+// ensure querying is done on new markers onle
 if(resData1.sim.length!=0){
 let createtime2=resData1.sim[0].createtime;
 let vep1=document.getElementById("dope").innerText;
@@ -501,7 +491,8 @@ document.getElementById("dope").innerText = res1;
 console.log(res1);
 }
   });
-},5000);
+},5000); 
+  // every 5 seconds the realtime aspect is done (e.g. refresh page 5 seconds wihtout any blinking)
 }
     });
 
@@ -541,11 +532,13 @@ console.log(res1);
           <%= respose[1] %>
         </div>
          
+          <!-- severitymaster is the id of the div tag under the Severity category button.-->
           <script>
-          dyrender('severitymaster','severity', '');
+          dyrender('severitymaster','severity', ''); 
           console.log("number of Severity " + document.getElementById("something1").innerText);
         </script>
         <% for(var i=2; i<(respose[1])+2; i++){ %>
+        <!-- Creating the checkboxes and labels dynamically for severity -->
           <script>
             var slc1=document.getElementById('severity');
             var ele='<%=respose[i]%>';
@@ -560,6 +553,7 @@ console.log(res1);
             label.align="left";
             label.setAttribute( 'style', 'color:#000000;');
             var te=ele;
+            // if there is no severity, do not display anything
              if(ele=="null" && document.getElementById("something1").innerText == 1){
                       te="";
                        checkbox.style.display = 'none'; 
@@ -582,19 +576,39 @@ console.log(res1);
             checkbox.setAttribute("onClick","task(event);");
           </script>
         <%}%>
+        <script>
+          var slid1= document.getElementById('slidecontainer1');
+          var slid1in=document.createElement('input');
+          slid1in.type="range"
+          slid1in.className="slider";
+          slid1in.id="myRange";
+          slid1in.min="0";
+          slid1in.max="1";
+          slid1in.step="0.0001";
+          slid1in.value="0"
+          var slid1inp=document.createElement('p');
+          slid1inp.className="paralign";
+          var slid1inspan=document.createElement('span');
+          slid1inspan.className="smallbutton";
+          slid1inspan.id="demon";
+          slid1inp.appendChild(slid1inspan);
+          slid1.appendChild(slid1in);
+          slid1.appendChild(slid1inp);
+        </script>
         <%}%>
         <% if(respose[i]!=0){%>
         <div id="something2" hidden='true'>
           <%= respose[i] %>
         </div>
+        <!-- aidrmaster is the id of the div tag under the AIDR Label category button.-->
             <script >
                 dyrender('aidrmaster','aidr', '');
                 console.log("number of AIDR label " + document.getElementById("something2").innerText);
         </script>
       
          <% for(var j=i+1; j<(respose[i])+i+1; j++){ %>
+          <!-- Creating the checkboxes and labels dynamically for aidr-->
               <script>
-
                 var slc2=document.getElementById('aidr');
                 var ele='<%=respose[j]%>';
                 var check = ele.charAt(0).toUpperCase() + ele.slice(1);
@@ -607,6 +621,7 @@ console.log(res1);
                 var label = document.createElement('label')
                 label.setAttribute( 'style', 'color:#000000;');
                 label.htmlFor = ele;
+                  // if there is no aidr, do not display anything
                  if(ele=="null" && document.getElementById("something2").innerText == 1){
                        checkbox.style.display = 'none'; 
                        var x= document.getElementById("hello2");
@@ -618,17 +633,37 @@ console.log(res1);
                 checkbox.setAttribute("onClick","task(event);");
               </script>
          <%}%>
+         <script>
+          var slid2= document.getElementById('slidecontainer2');
+          var slid2in=document.createElement('input');
+          slid2in.type="range"
+          slid2in.className="slider";
+          slid2in.id="myRange1";
+          slid2in.min="0";
+          slid2in.max="1";
+          slid2in.step="0.0001";
+          slid2in.value="0"
+          var slid2inp=document.createElement('p');
+          slid2inp.className="paralign";
+          var slid2inspan=document.createElement('span');
+          slid2inspan.className="smallbutton";
+          slid2inspan.id="demon1";
+          slid2inp.appendChild(slid2inspan);
+          slid2.appendChild(slid2in);
+          slid2.appendChild(slid2inp);
+        </script>
          <%}%>
          <% if(respose[j]!=0){%>
          <div id="something3" hidden='true'>
           <%= respose[j] %>
         </div>
-
+  <!-- sentimentmaster is the id of the div tag under the Sentiment category button.-->
          <script>
            dyrender('sentimentmaster','sentiment','');
            console.log("number of Sentiment " + document.getElementById("something3").innerText);
         </script>
          <% for(var k=j+1; k<(respose[j])+j+1; k++){ %>
+         <!-- Creating the checkboxes and labels dynamically for sentiment -->
               <script>
                 var slc3=document.getElementById('sentiment');
                 var ele='<%=respose[k]%>';
@@ -641,6 +676,7 @@ console.log(res1);
                 label.htmlFor = ele;
                 label.setAttribute( 'style', 'color:#000000;');
                 te=ele;
+                 // if there is no aidr, do not display anything
                 if(ele=="null" && document.getElementById("something3").innerText == 1){
                       te="";
                        checkbox.style.display = 'none'; 
@@ -653,6 +689,25 @@ console.log(res1);
                 checkbox.setAttribute("onClick","task(event);");
               </script>
          <%}%>
+         <script>
+          var slid3= document.getElementById('slidecontainer3');
+          var slid3in=document.createElement('input');
+          slid3in.type="range"
+          slid3in.className="slider";
+          slid3in.id="myRange2";
+          slid3in.min="0";
+          slid3in.max="1";
+          slid3in.step="0.0001";
+          slid3in.value="0"
+          var slid3inp=document.createElement('p');
+          slid3inp.className="paralign";
+          var slid3inspan=document.createElement('span');
+          slid3inspan.className="smallbutton";
+          slid3inspan.id="demon2";
+          slid3inp.appendChild(slid3inspan);
+          slid3.appendChild(slid3in);
+          slid3.appendChild(slid3inp);
+        </script>
          <%}%>
 
          
@@ -660,12 +715,13 @@ console.log(res1);
          <div id="something4" hidden='true'>
           <%= respose[k] %>
         </div>
-          
+       <!-- imagemaster is the id of the div tag under the Image category button.-->     
   <script>
          dyrender('imagemaster','image','');
          console.log("number of Image " + document.getElementById("something4").innerText);
         </script>
          <% for(var l1=k+1; l1<(respose[k])+k+1; l1++){ %>
+          <!-- Creating the checkboxes and labels dynamically for sentiment -->
               <script>
                 var slc4=document.getElementById("image");
                 var ele='<%=respose[l1]%>';
@@ -686,6 +742,40 @@ console.log(res1);
          <%}%>
         <% }%>
           <%}%>
+          <!-- Slider  -->
+<script>
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demon");
+output.innerHTML = slider.value;
+slider.oninput = function() {
+ output.innerHTML = this.value;
+}
+slider.onmouseup=function(){
+ task(event);
+}
+var slider1 = document.getElementById("myRange1");
+var output1 = document.getElementById("demon1");
+output1.innerHTML = slider1.value;
+slider1.oninput = function() {
+ output1.innerHTML = this.value;
+}
+slider1.onmouseup=function(){
+ task(event);
+}
+var slider2 = document.getElementById("myRange2");
+var output2 = document.getElementById("demon2");
+output2.innerHTML = slider2.value;
+slider2.oninput = function() {
+ output2.innerHTML = this.value;
+}
+slider2.onmouseup=function(){
+ task(event);
+}
+</script>
+          <!-- For aidr, sentiment and image damage class, we find which checboxes are checked so that we can query appropriately -->
+          <!-- These are stored in str, str2, str3 -->
+          <!-- Then an appropriate query is written - query1, query2 and query3 -->
+          <!-- for image, query4 is written directly -->
          <script>
              function task(e){
               console
@@ -778,13 +868,15 @@ console.log(res1);
                      query3 += '{sentiment:'+'\"'+ str3[n] + '\"'+'}';   
                 }
 
-
+// Then all the querying are combined and sent to the controller.
+// Remember: Across different categories it is an "AND" cosntion, and within a category it is an "OR" condition
                 var qu='/tweets/filteror?q1='+query1+'&q2='+query2+'&q3='+query3+'&q4='+query4+'&q5='+0+'&q7='+0+'&q9='+document.getElementById("dep").innerHTML+'&q10='+document.getElementById("demon").innerHTML+'&q11='+document.getElementById("demon1").innerHTML+'&q12='+document.getElementById("demon2").innerHTML+'&q8='+'xyz';
                 console.log(document.getElementById("dep"))
                 document.getElementById("dope").innerText = '/tweets/filteror?q1='+query1+'&q2='+query2+'&q3='+query3+'&q4='+query4+'&q5='+1+'&q7='+1+'&q9='+document.getElementById("dep").innerHTML+'&q10='+document.getElementById("demon").innerHTML+'&q11='+document.getElementById("demon1").innerHTML+'&q12='+document.getElementById("demon2").innerHTML+'&q8='+'xyz';
                 get1(qu,0);
     }    
          </script>
+         <!-- Load the slider  -->
          <script>
           window.onload = function() {
               console.log(document.getElementById("demon2"));
