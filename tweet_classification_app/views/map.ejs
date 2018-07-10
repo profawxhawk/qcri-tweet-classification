@@ -1,6 +1,4 @@
-
 <% title = 'Tweet Classification' %>
-
 
 <div id="myNav" class="overlay">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -48,8 +46,20 @@
   </div>
 
 </div>  
-<!-- Accrodian are the collapsable and expandable categories in green -->
 <script>
+
+
+  // connecting to socket.io to get data from sim
+
+  var outer=io.sails.connect();
+  var inner=io.sails.connect();
+
+  var collection_code = '<%=respose[0]%>';
+  var query_code = '';
+
+
+  //Accrodian are the collapsable and expandable categories in green
+
   var acc = document.getElementsByClassName("accordion");
   var i;
 
@@ -64,9 +74,9 @@
       }
     });
   }
-</script> 
-<!-- Start button enables the simulator -->
-<script>
+
+// Start button enables the simulator 
+
   var windoww= "";
 
   function Action(el) {
@@ -102,9 +112,6 @@
 
 </div>
 
-<div id="dep" hidden="true"><%=respose[0]%></div>
-<div id="dope" hidden="true"></div>
-
 <!-- This takes the labels from the database which have underscores and removes them, and capitalizes the first character -->
 <script>
   String.prototype.replaceAt=function(index, replacement) {
@@ -139,7 +146,7 @@ function closeNav() {
 </script>
 
 <script> 
- console.log(document.getElementById("dep").innerHTML);
+ console.log(collection_code);
      // this is required for the map to be displayed
      var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
      '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -169,33 +176,40 @@ var overlays = {
   "Markers": markerGroup
 };
 L.control.layers(baseLayers, overlays).addTo(map);
+
+
+
+
+
+
   // Green  marker
-  var myIcon = L.icon({
-    iconUrl: '/images/pin24.png',
-    iconRetinaUrl:'/images/pin48.png',
-    iconSize: [34, 29],
-    iconAnchor: [9, 21],
-    popupAnchor: [0, -14]
+  var myIcon = L.ExtraMarkers.icon({
+    icon: 'fa-circle-o',
+    iconShape: 'circle',
+    markerColor: 'green',
+    prefix: 'fa'
   });
+
   // Yellow color marker
-  var myIcon2 = L.icon({
-    iconUrl: '/images/pin24(2).png',
-    iconRetinaUrl:'/images/pin48(2).png',
-    iconSize: [34, 29],
-    iconAnchor: [9, 21],
-    popupAnchor: [0, -14]
+  var myIcon2 = L.ExtraMarkers.icon({
+    icon: 'fa-circle-o',
+    iconShape: 'circle',
+    markerColor: 'yellow',
+    prefix: 'fa'
   });
   // Red color marker
-  var myIcon3 = L.icon({
-    iconUrl: '/images/pin24(3).png',
-    iconRetinaUrl:'/images/pin48(3).png',
-    iconSize: [34, 29],
-    iconAnchor: [9, 21],
-    popupAnchor: [0, -14]
+  var myIcon3 = L.ExtraMarkers.icon({
+    icon: 'fa-circle-o',
+    iconShape: 'circle',
+    markerColor: 'red',
+    prefix: 'fa'
   });
-  // connecting to socket.io to get data from sim
-  var outer=io.sails.connect();
-  var inner=io.sails.connect();
+
+
+
+
+
+
   function get1(qu,flag){
 
     outer.get(qu, function (resData, jwres){
@@ -331,22 +345,22 @@ else{
  // this is to ensure the querying is done for new markers only
  if(resData.sim.length!=0){
   let createtime1=resData.sim[0].createtime;
-  let vep=document.getElementById("dope").innerText;
+  let vep=query_code;
   var n = vep.indexOf("q8");
   console.log(vep)
   console.log(vep.replace(vep.substring(n+3), createtime1));
   var res = vep.replace(vep.substring(n+3), createtime1);
   console.log(res);
-  document.getElementById("dope").innerText = res;
+  query_code = res;
   console.log(res);
 }
 if(flag==0){
  setInterval(
 
   function(){
-    inner.get(document.getElementById("dope").innerText, function (resData1, jwres){
+    inner.get(query_code, function (resData1, jwres){
       console.log("checkkkk" + resData1.sim);
-      console.log((document.getElementById("dep").innerText))
+      console.log(collection_code)
       for(let i=0;i<resData1.sim.length; i++){
         let latii= resData1.sim[i].latitude
         let longi= resData1.sim[i].longitude 
@@ -467,10 +481,10 @@ else{
 // ensure querying is done on new markers onle
 if(resData1.sim.length!=0){
   let createtime2=resData1.sim[0].createtime;
-  let vep1=document.getElementById("dope").innerText;
+  let vep1=query_code;
   var n1 = vep1.indexOf("q8");
   var res1 = vep1.replace(vep1.substring(n1+3), createtime2);
-  document.getElementById("dope").innerText = res1;
+  query_code = res1;
   console.log(res1);
 }
 });
@@ -853,9 +867,9 @@ if(resData1.sim.length!=0){
 
 // Then all the querying are combined and sent to the controller.
 // Remember: Across different categories it is an "AND" cosntion, and within a category it is an "OR" condition
-var qu='/tweets/filteror?q1='+query1+'&q2='+query2+'&q3='+query3+'&q4='+query4+'&q5='+0+'&q7='+0+'&q9='+document.getElementById("dep").innerHTML+'&q10='+document.getElementById("demon").innerHTML+'&q11='+document.getElementById("demon1").innerHTML+'&q12='+document.getElementById("demon2").innerHTML+'&q8='+'xyz';
-console.log(document.getElementById("dep"))
-document.getElementById("dope").innerText = '/tweets/filteror?q1='+query1+'&q2='+query2+'&q3='+query3+'&q4='+query4+'&q5='+1+'&q7='+1+'&q9='+document.getElementById("dep").innerHTML+'&q10='+document.getElementById("demon").innerHTML+'&q11='+document.getElementById("demon1").innerHTML+'&q12='+document.getElementById("demon2").innerHTML+'&q8='+'xyz';
+var qu='/tweets/filteror?q1='+query1+'&q2='+query2+'&q3='+query3+'&q4='+query4+'&q5='+0+'&q7='+0+'&q9='+collection_code+'&q10='+document.getElementById("demon").innerHTML+'&q11='+document.getElementById("demon1").innerHTML+'&q12='+document.getElementById("demon2").innerHTML+'&q8='+'xyz';
+console.log(collection_code);
+query_code = '/tweets/filteror?q1='+query1+'&q2='+query2+'&q3='+query3+'&q4='+query4+'&q5='+1+'&q7='+1+'&q9='+collection_code+'&q10='+document.getElementById("demon").innerHTML+'&q11='+document.getElementById("demon1").innerHTML+'&q12='+document.getElementById("demon2").innerHTML+'&q8='+'xyz';
 get1(qu,0);
 }    
 </script>
@@ -863,7 +877,7 @@ get1(qu,0);
 <script>
   window.onload = function() {
     console.log(document.getElementById("demon2"));
-    get1('/tweets/filteror?q1='+''+'&q2='+''+'&q3='+''+'&q4='+''+'&q5='+0+'&q7='+0+'&q9='+document.getElementById("dep").innerHTML+'&q10='+document.getElementById("demon").innerHTML+'&q11='+document.getElementById("demon1").innerHTML+'&q12='+document.getElementById("demon2").innerHTML+'&q8='+'xyz',1);
+    get1('/tweets/filteror?q1='+''+'&q2='+''+'&q3='+''+'&q4='+''+'&q5='+0+'&q7='+0+'&q9='+collection_code+'&q10='+document.getElementById("demon").innerHTML+'&q11='+document.getElementById("demon1").innerHTML+'&q12='+document.getElementById("demon2").innerHTML+'&q8='+'xyz',1);
   }
 </script>
 
