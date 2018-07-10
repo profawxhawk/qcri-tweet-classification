@@ -46,6 +46,9 @@
   </div>
 
 </div>  
+
+
+
 <script>
 
 
@@ -77,20 +80,20 @@
 
 // Start button enables the simulator 
 
-  var windoww= "";
+var windoww= "";
 
-  function Action(el) {
+function Action(el) {
 
-    my_window = window.open('http://localhost:1337/sim/add','','width=,height=,resizable=no');
-    windoww=my_window;  
-    my_window.focus();
+  my_window = window.open('http://localhost:1337/sim/add','','width=,height=,resizable=no');
+  windoww=my_window;  
+  my_window.focus();
 
-    if ( el.value === "Start" )
-      el.value = "Stop";
-    else
-      el.value = "Start";
+  if ( el.value === "Start" )
+    el.value = "Stop";
+  else
+    el.value = "Start";
 
-  }
+}
 </script>
 
 <!-- This displays the map -->
@@ -143,10 +146,7 @@ function closeNav() {
   $("#SpanHeader2").toggleClass("Black");
   document.getElementById("myNav").style.width = "0%";
 }
-</script>
-
-<script> 
- console.log(collection_code);
+console.log(collection_code);
      // this is required for the map to be displayed
      var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
      '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -156,14 +156,20 @@ function closeNav() {
   var streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets',   attribution: mbAttr}),
   satellite  = L.tileLayer(mbUrl, {id: 'mapbox.streets-satellite',   attribution: mbAttr});
     // layergroup is a constrctor for storing the markers
-    var markerGroup = L.layerGroup();
+//var markerGroup = L.layerGroup();
+
+
+ var mcg = L.markerClusterGroup();
+
  // setting the map with diffrent properties + different layers
  var map = L.map( 'map', {
   center: [20.0, 5.0],
   minZoom: 2,
   zoom: 2,
-  layers: [streets, markerGroup]
+  layers: [streets, mcg]
 });
+
+
  L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   subdomains: ['a', 'b', 'c']
@@ -173,7 +179,7 @@ function closeNav() {
   "Satellite": satellite
 };
 var overlays = {
-  "Markers": markerGroup
+  "Markers": mcg
 };
 L.control.layers(baseLayers, overlays).addTo(map);
 
@@ -213,8 +219,8 @@ L.control.layers(baseLayers, overlays).addTo(map);
   function get1(qu,flag){
 
     outer.get(qu, function (resData, jwres){
-      markerGroup.clearLayers();
-      map.addLayer(markerGroup);
+      mcg.clearLayers();
+      map.addLayer(mcg);
       console.log(resData.sim.length);
       console.log(qu);
       for(let j=0; j<resData.sim.length; j++){ 
@@ -263,80 +269,80 @@ function onMapClick2() {
 // for each severity there are two cases- with and without image. Here we are just creating the marker and adding it to a markerGroup
 if (severity== ('None')){
  if(img==''){
-  little = new L.marker([long,lati], {icon: myIcon} ).addTo(markerGroup); 
+  little = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
   little.on('click', onMapClick2);   
 
 }
 else{
-  little1 = new L.marker([long,lati], {icon: myIcon} ).addTo(markerGroup); 
+  little1 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
   little1.on('click', onMapClick);   
 
 }
 }
 else if (severity=='Mild') {
   if(img==''){
-    little2 = new L.marker([long,lati], {icon: myIcon2} ).addTo(markerGroup); 
+    little2 = new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg); 
     little2.on('click', onMapClick2);   
 
   }
   else{
-    little3 = new L.marker([long,lati], {icon: myIcon2} ).addTo(markerGroup); 
+    little3 = new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg); 
     little3.on('click', onMapClick);   
 
   }
 }
 else if (severity=='Severe') {
  if( img==''){
-  little4 = new L.marker([long,lati], {icon: myIcon3} ).addTo(markerGroup); 
+  little4 = new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg); 
   little4.on('click', onMapClick2);   
 }
 else{
 
-  little5= new L.marker([long,lati], {icon: myIcon3} ).addTo(markerGroup); 
+  little5= new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg); 
   little5.on('click', onMapClick); 
 }
 } 
 else if (severity=='Minor') {
  if( img==''){
-  little41 = new L.marker([long,lati], {icon: myIcon} ).addTo(markerGroup); 
+  little41 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
   little41.on('click', onMapClick2);   
 }
 else{
 
-  little51= new L.marker([long,lati], {icon: myIcon} ).addTo(markerGroup); 
+  little51= new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
   little51.on('click', onMapClick); 
 }
 }
 else if (severity=='Moderate') {
  if( img==''){
-  little42 = new L.marker([long,lati], {icon: myIcon2} ).addTo(markerGroup); 
+  little42 = new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg); 
   little42.on('click', onMapClick2);   
 }
 else{
 
-  little52= new L.marker([long,lati], {icon: myIcon2} ).addTo(markerGroup); 
+  little52= new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg); 
   little52.on('click', onMapClick); 
 }
 }
 else if (severity=='Major') {
  if( img==''){
-  little43 = new L.marker([long,lati], {icon: myIcon3} ).addTo(markerGroup); 
+  little43 = new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg); 
   little43.on('click', onMapClick2);   
 }
 else{
 
-  little53= new L.marker([long,lati], {icon: myIcon3} ).addTo(markerGroup); 
+  little53= new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg); 
   little53.on('click', onMapClick); 
 }
 }
 else {
  if(img==''){
-  little6 = new L.marker([long,lati], {icon: myIcon} ).addTo(markerGroup); 
+  little6 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
   little6.on('click', onMapClick2);   
 
 }
 else{
-  little7 = new L.marker([long,lati], {icon: myIcon} ).addTo(markerGroup); 
+  little7 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
   little7.on('click', onMapClick);   
 
 }
@@ -399,80 +405,80 @@ function onMapClick21() {
 // same process here with markeres created for image and without image
 if (severityi== ('None')){
  if(imgi==''){
-  littlei = new L.marker([longi,latii], {icon: myIcon} ).addTo(markerGroup); 
+  littlei = new L.marker([longi,latii], {icon: myIcon} ).addTo(mcg); 
   littlei.on('click', onMapClick21);   
 
 }
 else{
-  little1i = new L.marker([longi,latii], {icon: myIcon} ).addTo(markerGroup); 
+  little1i = new L.marker([longi,latii], {icon: myIcon} ).addTo(mcg); 
   little1i.on('click', onMapClick1);   
 
 }
 }
 else if (severityi=='Mild') {
   if(imgi==''){
-    little2i = new L.marker([longi,latii], {icon: myIcon2} ).addTo(markerGroup); 
+    little2i = new L.marker([longi,latii], {icon: myIcon2} ).addTo(mcg); 
     little2i.on('click', onMapClick21);   
 
   }
   else{
-    little3i = new L.marker([longi,latii], {icon: myIcon2} ).addTo(markerGroup); 
+    little3i = new L.marker([longi,latii], {icon: myIcon2} ).addTo(mcg); 
     little3i.on('click', onMapClick1);   
 
   }
 }
 else if (severityi=='Severe') {
  if( imgi==''){
-  little4i = new L.marker([longi,latii], {icon: myIcon3} ).addTo(markerGroup); 
+  little4i = new L.marker([longi,latii], {icon: myIcon3} ).addTo(mcg); 
   little4i.on('click', onMapClick21);   
 }
 else{
 
-  little5i= new L.marker([longi,latii], {icon: myIcon3} ).addTo(markerGroup); 
+  little5i= new L.marker([longi,latii], {icon: myIcon3} ).addTo(mcg); 
   little5i.on('click', onMapClick1); 
 }
 } 
 else if (severity=='Minor') {
  if( img==''){
-  little41 = new L.marker([long,lati], {icon: myIcon} ).addTo(markerGroup); 
+  little41 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
   little41.on('click', onMapClick2);   
 }
 else{
 
-  little51= new L.marker([long,lati], {icon: myIcon} ).addTo(markerGroup); 
+  little51= new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
   little51.on('click', onMapClick); 
 }
 }
 else if (severity=='Moderate') {
  if( img==''){
-  little42 = new L.marker([long,lati], {icon: myIcon2} ).addTo(markerGroup); 
+  little42 = new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg); 
   little42.on('click', onMapClick2);   
 }
 else{
 
-  little52= new L.marker([long,lati], {icon: myIcon2} ).addTo(markerGroup); 
+  little52= new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg); 
   little52.on('click', onMapClick); 
 }
 }
 else if (severity=='Major') {
  if( img==''){
-  little43 = new L.marker([long,lati], {icon: myIcon3} ).addTo(markerGroup); 
+  little43 = new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg); 
   little43.on('click', onMapClick2);   
 }
 else{
 
-  little53= new L.marker([long,lati], {icon: myIcon3} ).addTo(markerGroup); 
+  little53= new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg); 
   little53.on('click', onMapClick); 
 }
 }
 else {
  if(imgi==''){
-  little6i = new L.marker([longi,latii], {icon: myIcon} ).addTo(markerGroup); 
+  little6i = new L.marker([longi,latii], {icon: myIcon} ).addTo(mcg); 
   little6i.on('click', onMapClick21);   
 
 }
 else{
-  little7i = new L.marker([longi,latii], {icon: myIcon} ).addTo(markerGroup); 
+  little7i = new L.marker([longi,latii], {icon: myIcon} ).addTo(mcg); 
   little7i.on('click', onMapClick1);   
 
 }
@@ -495,32 +501,34 @@ if(resData1.sim.length!=0){
 
 }
 
+function dyrender(s1,s2,s3){
+  var num = document.getElementById(s1);
+  var td = document.createElement('td');
+  var tr=document.createElement('tr');
+  var h4=document.createElement('h4');
+  var div=document.createElement('div');
+  div.id=s2;
+  var txt=document.createTextNode(s3);
+  h4.appendChild(txt);
+  td.appendChild(h4);
+  tr.appendChild(td);
+  num.appendChild(tr);
+  td=document.createElement('td');
+  tr=document.createElement('tr');
+  td.appendChild(div);
+  tr.appendChild(td);
+  num.appendChild(tr);
+  td=document.createElement('td');
+  tr=document.createElement('tr');
+  td.appendChild(document.createTextNode( '\u00A0' ));
+  tr.appendChild(td);
+  num.appendChild(tr);
+}
 </script>
-<script>
-  function dyrender(s1,s2,s3){
-    var num = document.getElementById(s1);
-    var td = document.createElement('td');
-    var tr=document.createElement('tr');
-    var h4=document.createElement('h4');
-    var div=document.createElement('div');
-    div.id=s2;
-    var txt=document.createTextNode(s3);
-    h4.appendChild(txt);
-    td.appendChild(h4);
-    tr.appendChild(td);
-    num.appendChild(tr);
-    td=document.createElement('td');
-    tr=document.createElement('tr');
-    td.appendChild(div);
-    tr.appendChild(td);
-    num.appendChild(tr);
-    td=document.createElement('td');
-    tr=document.createElement('tr');
-    td.appendChild(document.createTextNode( '\u00A0' ));
-    tr.appendChild(td);
-    num.appendChild(tr);
-  }
-</script>
+
+
+
+
 <% if(respose[respose.length-1]!=0){%>
 <div>
 
