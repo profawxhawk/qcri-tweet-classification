@@ -15,5 +15,5 @@ module.exports.myconf = {
     image:'',
     displaysentiment: "Sentiment: ",
     displayseverity: "Severity: ",
-     displayaidr: "Humanitarian Category: ",
+    displayaidr: "Humanitarian Category: ",
 };
