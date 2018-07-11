@@ -13,6 +13,7 @@ module.exports = {
 		var url;
 		var tweet_text;
 		var twitterdata =[];
+    
 		function timer() 
 		{
 	    	return nIntervId1 = setInterval(generate, 500); //generates a tweet every 0.5 seconds
