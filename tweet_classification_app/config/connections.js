@@ -60,7 +60,7 @@ module.exports.connections = {
     adapter: 'sails-mongo',
     host: 'localhost',
     port: 27017,
-    database: 'QCRI' //type in your database here
+    database: 'twitterdb' //type in your database here
   },
 
   /***************************************************************************
