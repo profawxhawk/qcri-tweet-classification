@@ -2,7 +2,6 @@
 
 <div id="myNav" class="overlay">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <%console.log(respose[respose.length-1])%>
   <!-- The key is an image,so depending on the collection code we are displaying the right key -->
   <!-- You can change this so that the markers image are constant, and you just change the text boxes -->
   <%if (sails.config.myconf.collectioncode == "170826213907_hurricane_harvey_2017") {%>
@@ -45,7 +44,7 @@
     <div class="overlay-content"  align="left"  id="imagemaster"></div>
   </div>
 
-</div>  
+</div>
 
 
 
@@ -78,14 +77,14 @@
     });
   }
 
-// Start button enables the simulator 
+// Start button enables the simulator
 
 var windoww= "";
 
 function Action(el) {
 
   my_window = window.open('http://localhost:1337/sim/add','','width=,height=,resizable=no');
-  windoww=my_window;  
+  windoww=my_window;
   my_window.focus();
 
   if ( el.value === "Start" )
@@ -97,7 +96,7 @@ function Action(el) {
 </script>
 
 <!-- This displays the map -->
-<div id="map"> 
+<div id="map">
 
  <br>
  <br>
@@ -106,9 +105,9 @@ function Action(el) {
 
  <div class="btn-group" style="z-index: 401"> <!-- Use 401 to be between map and controls-->
   <!-- This is the three lines that opens the filters -->
-  <span  id="SpanHeader" class="CourseHeader"  onclick="openNav()">&#9776; &nbsp </span>  
+  <span  id="SpanHeader" class="CourseHeader"  onclick="openNav()">&#9776; &nbsp </span>
   <!-- Click me image next to it -->
-  <img src="/click.png" id="SpanHeader2" class="CourseHeader2" > 
+  <img src="/click.png" id="SpanHeader2" class="CourseHeader2" >
 </div>
 
 
@@ -146,7 +145,6 @@ function closeNav() {
   $("#SpanHeader2").toggleClass("Black");
   document.getElementById("myNav").style.width = "0%";
 }
-console.log(collection_code);
      // this is required for the map to be displayed
      var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
      '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
@@ -221,17 +219,15 @@ L.control.layers(baseLayers, overlays).addTo(map);
     outer.get(qu, function (resData, jwres){
       mcg.clearLayers();
       map.addLayer(mcg);
-      console.log(resData.sim.length);
-      console.log(qu);
-      for(let j=0; j<resData.sim.length; j++){ 
+      for(let j=0; j<resData.sim.length; j++){
 
         let lati= resData.sim[j].latitude;
-        let long= resData.sim[j].longitude; 
-        let text1= resData.sim[j].tweet_text; 
-        let img= resData.sim[j].image_physical_location; 
-        let aidr= resData.sim[j].aidr_class_label; 
-        let sentiment= resData.sim[j].sentiment; 
-        let severity= resData.sim[j].image_damage_class; 
+        let long= resData.sim[j].longitude;
+        let text1= resData.sim[j].tweet_text;
+        let img= resData.sim[j].image_physical_location;
+        let aidr= resData.sim[j].aidr_class_label;
+        let sentiment= resData.sim[j].sentiment;
+        let severity= resData.sim[j].image_damage_class;
   // this takes the url part fo tweet text and makes it a hyperlink
   function linkify(text) {
    var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
@@ -269,111 +265,105 @@ function onMapClick2() {
 // for each severity there are two cases- with and without image. Here we are just creating the marker and adding it to a markerGroup
 if (severity== ('None')){
  if(img==''){
-  little = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
-  little.on('click', onMapClick2);   
+  little = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg);
+  little.on('click', onMapClick2);
 
 }
 else{
-  little1 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
-  little1.on('click', onMapClick);   
+  little1 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg);
+  little1.on('click', onMapClick);
 
 }
 }
 else if (severity=='Mild') {
   if(img==''){
-    little2 = new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg); 
-    little2.on('click', onMapClick2);   
+    little2 = new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg);
+    little2.on('click', onMapClick2);
 
   }
   else{
-    little3 = new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg); 
-    little3.on('click', onMapClick);   
+    little3 = new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg);
+    little3.on('click', onMapClick);
 
   }
 }
 else if (severity=='Severe') {
  if( img==''){
-  little4 = new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg); 
-  little4.on('click', onMapClick2);   
+  little4 = new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg);
+  little4.on('click', onMapClick2);
 }
 else{
 
-  little5= new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg); 
-  little5.on('click', onMapClick); 
+  little5= new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg);
+  little5.on('click', onMapClick);
 }
-} 
+}
 else if (severity=='Minor') {
  if( img==''){
-  little41 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
-  little41.on('click', onMapClick2);   
+  little41 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg);
+  little41.on('click', onMapClick2);
 }
 else{
 
-  little51= new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
-  little51.on('click', onMapClick); 
+  little51= new L.marker([long,lati], {icon: myIcon} ).addTo(mcg);
+  little51.on('click', onMapClick);
 }
 }
 else if (severity=='Moderate') {
  if( img==''){
-  little42 = new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg); 
-  little42.on('click', onMapClick2);   
+  little42 = new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg);
+  little42.on('click', onMapClick2);
 }
 else{
 
-  little52= new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg); 
-  little52.on('click', onMapClick); 
+  little52= new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg);
+  little52.on('click', onMapClick);
 }
 }
 else if (severity=='Major') {
  if( img==''){
-  little43 = new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg); 
-  little43.on('click', onMapClick2);   
+  little43 = new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg);
+  little43.on('click', onMapClick2);
 }
 else{
 
-  little53= new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg); 
-  little53.on('click', onMapClick); 
+  little53= new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg);
+  little53.on('click', onMapClick);
 }
 }
 else {
  if(img==''){
-  little6 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
-  little6.on('click', onMapClick2);   
+  little6 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg);
+  little6.on('click', onMapClick2);
 
 }
 else{
-  little7 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
-  little7.on('click', onMapClick);   
+  little7 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg);
+  little7.on('click', onMapClick);
 
 }
-}      
+}
 }
  // this is to ensure the querying is done for new markers only
  if(resData.sim.length!=0){
   let createtime1=resData.sim[0].createtime;
   let vep=query_code;
   var n = vep.indexOf("q8");
-  console.log(vep)
-  console.log(vep.replace(vep.substring(n+3), createtime1));
   var res = vep.replace(vep.substring(n+3), createtime1);
-  console.log(res);
   query_code = res;
-  console.log(res);
 }
 if(flag==0){
  setInterval(
 
   function(){
     inner.get(query_code, function (resData1, jwres){
-      console.log("checkkkk" + resData1.sim);
-      console.log(collection_code)
       for(let i=0;i<resData1.sim.length; i++){
         let latii= resData1.sim[i].latitude
-        let longi= resData1.sim[i].longitude 
-        let text1i= resData1.sim[i].tweet_text 
-        let imgi= resData1.sim[i].image_physical_location 
-        let aidri= resData1.sim[i].aidr_class_label 
-        let sentimenti= resData1.sim[i].sentiment 
+        let longi= resData1.sim[i].longitude
+        let text1i= resData1.sim[i].tweet_text
+        let imgi= resData1.sim[i].image_physical_location
+        let aidri= resData1.sim[i].aidr_class_label
+        let sentimenti= resData1.sim[i].sentiment
         let severityi= resData1.sim[i].image_damage_class
         let txt1= text1i;
             // same as linkify function
@@ -405,84 +395,84 @@ function onMapClick21() {
 // same process here with markeres created for image and without image
 if (severityi== ('None')){
  if(imgi==''){
-  littlei = new L.marker([longi,latii], {icon: myIcon} ).addTo(mcg); 
-  littlei.on('click', onMapClick21);   
+  littlei = new L.marker([longi,latii], {icon: myIcon} ).addTo(mcg);
+  littlei.on('click', onMapClick21);
 
 }
 else{
-  little1i = new L.marker([longi,latii], {icon: myIcon} ).addTo(mcg); 
-  little1i.on('click', onMapClick1);   
+  little1i = new L.marker([longi,latii], {icon: myIcon} ).addTo(mcg);
+  little1i.on('click', onMapClick1);
 
 }
 }
 else if (severityi=='Mild') {
   if(imgi==''){
-    little2i = new L.marker([longi,latii], {icon: myIcon2} ).addTo(mcg); 
-    little2i.on('click', onMapClick21);   
+    little2i = new L.marker([longi,latii], {icon: myIcon2} ).addTo(mcg);
+    little2i.on('click', onMapClick21);
 
   }
   else{
-    little3i = new L.marker([longi,latii], {icon: myIcon2} ).addTo(mcg); 
-    little3i.on('click', onMapClick1);   
+    little3i = new L.marker([longi,latii], {icon: myIcon2} ).addTo(mcg);
+    little3i.on('click', onMapClick1);
 
   }
 }
 else if (severityi=='Severe') {
  if( imgi==''){
-  little4i = new L.marker([longi,latii], {icon: myIcon3} ).addTo(mcg); 
-  little4i.on('click', onMapClick21);   
+  little4i = new L.marker([longi,latii], {icon: myIcon3} ).addTo(mcg);
+  little4i.on('click', onMapClick21);
 }
 else{
 
-  little5i= new L.marker([longi,latii], {icon: myIcon3} ).addTo(mcg); 
-  little5i.on('click', onMapClick1); 
+  little5i= new L.marker([longi,latii], {icon: myIcon3} ).addTo(mcg);
+  little5i.on('click', onMapClick1);
 }
-} 
+}
 else if (severity=='Minor') {
  if( img==''){
-  little41 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
-  little41.on('click', onMapClick2);   
+  little41 = new L.marker([long,lati], {icon: myIcon} ).addTo(mcg);
+  little41.on('click', onMapClick2);
 }
 else{
 
-  little51= new L.marker([long,lati], {icon: myIcon} ).addTo(mcg); 
-  little51.on('click', onMapClick); 
+  little51= new L.marker([long,lati], {icon: myIcon} ).addTo(mcg);
+  little51.on('click', onMapClick);
 }
 }
 else if (severity=='Moderate') {
  if( img==''){
-  little42 = new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg); 
-  little42.on('click', onMapClick2);   
+  little42 = new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg);
+  little42.on('click', onMapClick2);
 }
 else{
 
-  little52= new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg); 
-  little52.on('click', onMapClick); 
+  little52= new L.marker([long,lati], {icon: myIcon2} ).addTo(mcg);
+  little52.on('click', onMapClick);
 }
 }
 else if (severity=='Major') {
  if( img==''){
-  little43 = new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg); 
-  little43.on('click', onMapClick2);   
+  little43 = new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg);
+  little43.on('click', onMapClick2);
 }
 else{
 
-  little53= new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg); 
-  little53.on('click', onMapClick); 
+  little53= new L.marker([long,lati], {icon: myIcon3} ).addTo(mcg);
+  little53.on('click', onMapClick);
 }
 }
 else {
  if(imgi==''){
-  little6i = new L.marker([longi,latii], {icon: myIcon} ).addTo(mcg); 
-  little6i.on('click', onMapClick21);   
+  little6i = new L.marker([longi,latii], {icon: myIcon} ).addTo(mcg);
+  little6i.on('click', onMapClick21);
 
 }
 else{
-  little7i = new L.marker([longi,latii], {icon: myIcon} ).addTo(mcg); 
-  little7i.on('click', onMapClick1);   
+  little7i = new L.marker([longi,latii], {icon: myIcon} ).addTo(mcg);
+  little7i.on('click', onMapClick1);
 
 }
-}           
+}
 }
 // ensure querying is done on new markers onle
 if(resData1.sim.length!=0){
@@ -491,10 +481,9 @@ if(resData1.sim.length!=0){
   var n1 = vep1.indexOf("q8");
   var res1 = vep1.replace(vep1.substring(n1+3), createtime2);
   query_code = res1;
-  console.log(res1);
 }
 });
-},5000); 
+},5000);
   // every 5 seconds the realtime aspect is done (e.g. refresh page 5 seconds wihtout any blinking)
 }
 });
@@ -539,8 +528,7 @@ function dyrender(s1,s2,s3){
 
   <!-- severitymaster is the id of the div tag under the Severity category button.-->
   <script>
-    dyrender('severitymaster','severity', ''); 
-    console.log("number of Severity " + document.getElementById("something1").innerText);
+    dyrender('severitymaster','severity', '');
   </script>
   <% for(var i=2; i<(respose[1])+2; i++){ %>
   <!-- Creating the checkboxes and labels dynamically for severity -->
@@ -561,7 +549,7 @@ function dyrender(s1,s2,s3){
             // if there is no severity, do not display anything
             if(ele=="null" && document.getElementById("something1").innerText == 1){
               te="";
-              checkbox.style.display = 'none'; 
+              checkbox.style.display = 'none';
               var x= document.getElementById("hello");
               x.innerHTML = "";
             }
@@ -577,7 +565,7 @@ function dyrender(s1,s2,s3){
             }
             label.appendChild(document.createTextNode(te+' '+'Severity'));
             slc1.appendChild(label);
-            slc1.appendChild(document.createElement("br"));   
+            slc1.appendChild(document.createElement("br"));
             checkbox.setAttribute("onClick","task(event);");
           </script>
           <%}%>
@@ -608,7 +596,6 @@ function dyrender(s1,s2,s3){
           <!-- aidrmaster is the id of the div tag under the AIDR Label category button.-->
           <script >
             dyrender('aidrmaster','aidr', '');
-            console.log("number of AIDR label " + document.getElementById("something2").innerText);
           </script>
 
           <% for(var j=i+1; j<(respose[i])+i+1; j++){ %>
@@ -617,7 +604,6 @@ function dyrender(s1,s2,s3){
             var slc2=document.getElementById('aidr');
             var ele='<%=respose[j]%>';
             var check = ele.charAt(0).toUpperCase() + ele.slice(1);
-            console.log(check);
             var checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.className ="aidr";
@@ -628,13 +614,13 @@ function dyrender(s1,s2,s3){
             label.htmlFor = ele;
                   // if there is no aidr, do not display anything
                   if(ele=="null" && document.getElementById("something2").innerText == 1){
-                   checkbox.style.display = 'none'; 
+                   checkbox.style.display = 'none';
                    var x= document.getElementById("hello2");
                    x.innerHTML = "";
                  }
                  label.appendChild(document.createTextNode(check.replace(/_/g,' ')));
                  slc2.appendChild(label);
-                 slc2.appendChild(document.createElement("br"));   
+                 slc2.appendChild(document.createElement("br"));
                  checkbox.setAttribute("onClick","task(event);");
                </script>
                <%}%>
@@ -665,7 +651,6 @@ function dyrender(s1,s2,s3){
               <!-- sentimentmaster is the id of the div tag under the Sentiment category button.-->
               <script>
                dyrender('sentimentmaster','sentiment','');
-               console.log("number of Sentiment " + document.getElementById("something3").innerText);
              </script>
              <% for(var k=j+1; k<(respose[j])+j+1; k++){ %>
              <!-- Creating the checkboxes and labels dynamically for sentiment -->
@@ -684,13 +669,13 @@ function dyrender(s1,s2,s3){
                  // if there is no aidr, do not display anything
                  if(ele=="null" && document.getElementById("something3").innerText == 1){
                   te="";
-                  checkbox.style.display = 'none'; 
+                  checkbox.style.display = 'none';
                   var x= document.getElementById("hello3");
                   x.innerHTML = "";
                 }
                 label.appendChild(document.createTextNode(te));
                 slc3.appendChild(label);
-                slc3.appendChild(document.createElement("br"));   
+                slc3.appendChild(document.createElement("br"));
                 checkbox.setAttribute("onClick","task(event);");
               </script>
               <%}%>
@@ -720,10 +705,9 @@ function dyrender(s1,s2,s3){
               <div id="something4" hidden='true'>
                 <%= respose[k] %>
               </div>
-              <!-- imagemaster is the id of the div tag under the Image category button.-->     
+              <!-- imagemaster is the id of the div tag under the Image category button.-->
               <script>
                dyrender('imagemaster','image','');
-               console.log("number of Image " + document.getElementById("something4").innerText);
              </script>
              <% for(var l1=k+1; l1<(respose[k])+k+1; l1++){ %>
              <!-- Creating the checkboxes and labels dynamically for sentiment -->
@@ -741,7 +725,7 @@ function dyrender(s1,s2,s3){
               label.setAttribute( 'style', 'color:#000000;');
               label.appendChild(document.createTextNode(check));
               slc4.appendChild(label);
-              slc4.appendChild(document.createElement("br"));   
+              slc4.appendChild(document.createElement("br"));
               checkbox.setAttribute("onClick","task(event);");
             </script>
             <%}%>
@@ -785,7 +769,6 @@ function dyrender(s1,s2,s3){
              function task(e){
               console
               var checks = document.getElementsByClassName('severity');
-              console.log(checks);
               var str = '';
               if ( '<%=sails.config.myconf.displayseverity %>'== "Severity: "){
                 for ( i = 0; i < document.getElementById("something1").innerText; i++) {
@@ -801,13 +784,9 @@ function dyrender(s1,s2,s3){
                 str= str.split(' ');
               }
               var checks2 = document.getElementsByClassName('aidr');
-              console.log(checks2);
               var str2 = '';
               if ( '<%=sails.config.myconf.displayaidr %>'== "Humanitarian Category: "){
                 for ( j = 0; j < document.getElementById("something2").innerText; j++) {
-
-                 console.log(checks2[j].checked);
-
                  if ( checks2[j].checked === true ) {
                   str2 += checks2[j].value + " ";
                 }
@@ -854,13 +833,13 @@ function dyrender(s1,s2,s3){
             for ( l = 0; l < str.length; l++) {
               if(str[l]=="null"){
                 idc[str[l]]=true;
-                query += '{image_damage_class:'+ '\"'+'\"'+'}'; 
-                query1+= '{image_damage_class:'+ '\"'+'\"'+'}'; 
+                query += '{image_damage_class:'+ '\"'+'\"'+'}';
+                query1+= '{image_damage_class:'+ '\"'+'\"'+'}';
               }
               else{
                 idc[str[l]]=true;
-                query += '{image_damage_class:'+ '\"'+str[l] + '\"'+'}';  
-                query1 += '{image_damage_class:'+ '\"'+str[l] + '\"'+'}'; 
+                query += '{image_damage_class:'+ '\"'+str[l] + '\"'+'}';
+                query1 += '{image_damage_class:'+ '\"'+str[l] + '\"'+'}';
               }
             }
             for ( m = 0; m < str2.length; m++) {
@@ -870,21 +849,19 @@ function dyrender(s1,s2,s3){
             var sen={'Positive':false,'Negative':false,'Neutral':false};
             for ( n = 0; n < str3.length; n++) {
               query += '{sentiment:'+'\"'+ str3[n] + '\"'+'}';
-              query3 += '{sentiment:'+'\"'+ str3[n] + '\"'+'}';   
+              query3 += '{sentiment:'+'\"'+ str3[n] + '\"'+'}';
             }
 
 // Then all the querying are combined and sent to the controller.
 // Remember: Across different categories it is an "AND" cosntion, and within a category it is an "OR" condition
 var qu='/tweets/filteror?q1='+query1+'&q2='+query2+'&q3='+query3+'&q4='+query4+'&q5='+0+'&q7='+0+'&q9='+collection_code+'&q10='+document.getElementById("demon").innerHTML+'&q11='+document.getElementById("demon1").innerHTML+'&q12='+document.getElementById("demon2").innerHTML+'&q8='+'xyz';
-console.log(collection_code);
 query_code = '/tweets/filteror?q1='+query1+'&q2='+query2+'&q3='+query3+'&q4='+query4+'&q5='+1+'&q7='+1+'&q9='+collection_code+'&q10='+document.getElementById("demon").innerHTML+'&q11='+document.getElementById("demon1").innerHTML+'&q12='+document.getElementById("demon2").innerHTML+'&q8='+'xyz';
 get1(qu,0);
-}    
+}
 </script>
 <!-- Load the slider  -->
 <script>
   window.onload = function() {
-    console.log(document.getElementById("demon2"));
     get1('/tweets/filteror?q1='+''+'&q2='+''+'&q3='+''+'&q4='+''+'&q5='+0+'&q7='+0+'&q9='+collection_code+'&q10='+document.getElementById("demon").innerHTML+'&q11='+document.getElementById("demon1").innerHTML+'&q12='+document.getElementById("demon2").innerHTML+'&q8='+'xyz',1);
   }
 </script>
