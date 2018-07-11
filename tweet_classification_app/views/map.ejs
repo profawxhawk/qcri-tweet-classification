@@ -787,7 +787,7 @@ function dyrender(s1,s2,s3){
               var checks = document.getElementsByClassName('severity');
               console.log(checks);
               var str = '';
-              if ( '<%=sails.config.myconf.displayseverity %>'== "Severity: "){
+              if ( '<%=sails.config.myconf.displayseverity %>'== "Severity: "|| '<%=sails.config.myconf.displayseverity %>'== " "){
                 for ( i = 0; i < document.getElementById("something1").innerText; i++) {
 
                   if ( checks[i].checked === true) {
@@ -803,7 +803,7 @@ function dyrender(s1,s2,s3){
               var checks2 = document.getElementsByClassName('aidr');
               console.log(checks2);
               var str2 = '';
-              if ( '<%=sails.config.myconf.displayaidr %>'== "Humanitarian Category: "){
+              if ( '<%=sails.config.myconf.displayaidr %>'== "Humanitarian Category: "|| '<%=sails.config.myconf.displayaidr %>'== " "){
                 for ( j = 0; j < document.getElementById("something2").innerText; j++) {
 
                  console.log(checks2[j].checked);
@@ -820,7 +820,7 @@ function dyrender(s1,s2,s3){
             }
             var checks3 = document.getElementsByClassName('sentiment');
             var str3 = '';
-            if ( '<%=sails.config.myconf.displaysentiment %>'== "Sentiment: "){
+            if ( '<%=sails.config.myconf.displaysentiment %>'== "Sentiment: "|| '<%=sails.config.myconf.displaysentiment %>'== " "){
               for ( k = 0; k < document.getElementById("something3").innerText; k++) {
 
                 if ( checks3[k].checked === true ) {
