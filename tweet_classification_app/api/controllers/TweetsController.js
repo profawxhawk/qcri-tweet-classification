@@ -1,12 +1,12 @@
 module.exports = {
 
-  findcoll:function(req,res){                      //function to find distinct labels from database
-    Tweets.native(function(err1,coll){
+  findcoll:function(req,res){                      //function to find different collection codes
+    Tweets.native(function(err1,coll){             //This is a seperate database which has a few already existing data so that we can get existing collection codes for sim table from these pre existing data
       if(err1){
         res.send(500,{error: 'Database error'});
       }
       else{
-        coll.distinct("code", function(err2,resu){
+        coll.distinct("code", function(err2,resu){      //achieved by using a distinct call with the particular collection code which returns all the different codes
           if(err2) {
             res.send(500,{error: 'Database error'});
           }
@@ -20,11 +20,12 @@ module.exports = {
   },
 
   filteror:function(req,res){              //function which queries database on each selection
-    function strtodict(text){
-      var dict={};
-      var list=[];
-      for(var i=0;i<text.length;i++){
-        if(text.charAt(i)=='{'){
+
+    function strtodict(text){    
+    var dict={};
+      var list=[];            
+      for(var i=0;i<text.length;i++){    //function to convert the incoming string from view into a list of dictionaries for the purpose of forming queries  
+        if(text.charAt(i)=='{'){          //example will convert "{key:value}{key1:value1}" ( a string ) to [{key:value},{key1:value1}] ( a list of dictionary)
           i++;
           var str='';
           while(text.charAt(i)!=':'){
@@ -49,86 +50,79 @@ module.exports = {
       }
       return list;   
     }
-    var a=req.param('q1');
-    var b=req.param('q2');
-    var c=req.param('q3');
-    var d=req.param('q4');
-    var listy1=strtodict(a);
-    var listy2=strtodict(b);
-    var listy3=strtodict(c);
-    var dict1={};
-    var dict2={};
-    var dict3={};
-    var dict4={};
-    var dict5={};
-    var dictimage={};
-    var time={}
-    var prev=[];
-    dict1['$or']=listy1;
-    dict2['$or']=listy2;
-    dict3['$or']=listy3;
-    var listy4=[];
-    if(dict1['$or'].length!==0){
-      listy4.push(dict1);
+      
+    var severity_string_query=req.param('q1');                //image_damage_class string query
+    var aidr_string_query=req.param('q2');                    //aidr_label string query
+    var sentiment_string_query=req.param('q3');               //sentiment string query
+    var image_string_query=req.param('q4');                   //image string query
+    var listy1=strtodict(severity_string_query);              //converts image_damage_class string query to a list of dictionaries
+    var listy2=strtodict(aidr_string_query);                  //converts aidr_label string query to a list of dictionaries
+    var listy3=strtodict(sentiment_string_query);             //converts sentiment string query to a list of dictionaries
+    var severity_dict_query={};                             
+    var aidr_dict_query={};
+    var sentiment_dict_query={};
+    var image_dict_query={};
+    severity_dict_query['$or']=listy1;                         //makes the dict query which "ors" the entire list of dictionary 
+    aidr_dict_query['$or']=listy2;                             //makes the dict query which "ors" the entire list of dictionary
+    sentiment_dict_query['$or']=listy3;                        //makes the dict query which "ors" the entire list of dictionary
+    var allquery_list=[];
+    if(severity_dict_query['$or'].length!==0){
+      allquery_list.push(severity_dict_query);                 //push all the intermediate dictionary queries in to a single list : severity
     }
-    if(dict2['$or'].length!==0){
-      listy4.push(dict2);
+    if(aidr_dict_query['$or'].length!==0){
+      allquery_list.push(aidr_dict_query);                     //push all the intermediate dictionary queries in to a single list : aidr
     }
-    if(dict3['$or'].length!==0){
-      listy4.push(dict3);
+    if(sentiment_dict_query['$or'].length!==0){
+      allquery_list.push(sentiment_dict_query);                //push all the intermediate dictionary queries in to a single list  : sentiment
     }
 
-    if(d=="yes"){
-      dictimage['$or']=[{"image_physical_location": { $nin: [''] } }];
-      listy4.push(dictimage);
-      prev.push('yes')
+    if(image_string_query=="yes"){                                               // various combinations for pushing image dict queries into single list
+      image_dict_query['$or']=[{"image_physical_location": { $nin: [''] } }];
+      allquery_list.push(image_dict_query);
     }
-    else if(d=="no"){
-      dictimage['$or']=[{"image_physical_location":""}];
-      listy4.push(dictimage);
-      prev.push('no')
+    else if(image_string_query=="no"){
+      image_dict_query['$or']=[{"image_physical_location":""}];
+      allquery_list.push(image_dict_query);
     }
-    else if(d=="both1"){
-      dictimage['$or']=[{"image_physical_location":""},{"image_physical_location": { $nin: [''] } }];
-      listy4.push(dictimage);
-      prev.push('both1')
+    else if(image_string_query=="both1"){
+      image_dict_query['$or']=[{"image_physical_location":""},{"image_physical_location": { $nin: [''] } }];
+      allquery_list.push(image_dict_query);
     }
-    else if(d=="both2"){
-      prev.push('both2')
+    else if(image_string_query=="both2"){
+      
     }
-    dictimage1={};
-    dictimage1['$or']=[{"code":req.param('q9')}];
-    listy4.push(dictimage1);
-    t={};
-    t1={};
-    t2={};
-    console.log(req.param('q10'))
+    code_dict_query={}; 
+    code_dict_query['$or']=[{"code":req.param('q9')}];                     // dict query for collection code
+    allquery_list.push(code_dict_query);                                   //push all the intermediate dictionary queries in to a single list : collection code
+    var allquery_dict={};
+    var dict5={};
+    var time={};
+    var slider_severity_dict_query={};
+    var slider_aidr_dict_query={};
+    var slider_sentiment_dict_query={};
     if(req.param('q10')!=0){
      var k1 = parseFloat(req.param('q10'));
-     t['$or']=[{"image_damage_class_conf":{$gt:(k1-0.1),$lt : (k1+0.1)}}];
-     listy4.push(t);
-     console.log(k1)
-     console.log('k1')
+     slider_severity_dict_query['$or']=[{"image_damage_class_conf":{$gt:(k1-0.1),$lt : (k1+0.1)}}];    //dict query for severity confidence (slider)
+     allquery_list.push(slider_severity_dict_query);                                                   //push all the intermediate dictionary queries in to a single list : severity confidence (slider)
    }
    if(req.param('q11')!=0){
      var k2 = parseFloat(req.param('q11'));
-     t1['$or']=[{"aidr_class_label_conf":{$gt:(k2-0.1),$lt : (k2+0.1)}}];
-     listy4.push(t1);
+     slider_aidr_dict_query['$or']=[{"aidr_class_label_conf":{$gt:(k2-0.1),$lt : (k2+0.1)}}];         //dict query for aidr confidence (slider)
+     allquery_list.push(slider_aidr_dict_query);                                                      //push all the intermediate dictionary queries in to a single list : aidr confidence (slider)
    }
    if(req.param('q12')!=0){
      var k3 = parseFloat(req.param('q12'));
-     t2['$or']=[{"sentiment_conf":{$gt:(k3-0.1),$lt : (k3+0.1)}}];
-     listy4.push(t2);
+     slider_sentiment_dict_query['$or']=[{"sentiment_conf":{$gt:(k3-0.1),$lt : (k3+0.1)}}];         //dict query for sentiment confidence (slider)
+     allquery_list.push(slider_sentiment_dict_query);                                               //push all the intermediate dictionary queries in to a single list : sentiment confidence (slider)
    }
-   dict4['$and']=listy4;
+   allquery_dict['$and']=allquery_list;                                                             //put the entire big list into a dictionary with an "and" connector 
    if (req.param('q7')==0){
-    Sim.find().where(dict4).exec(function(err,sim){
-     console.log(sim.length)
+    Sim.find().where(allquery_dict).exec(function(err,sim){                                       //the actual query
      if(err){
       res.send(500,{error: 'Database Error'});
     }
     if(sim.length!=0){
-      Sim.find({},{createdAt:1}).limit(1).sort({createdAt:-1}).exec(function(err,createtime){
+      Sim.find({},{createdAt:1}).limit(1).sort({createdAt:-1}).exec(function(err,createtime){           //find latest created at time and send it back to the map
         if(err){
           res.send(500,{error: 'Database error'});
         }
@@ -142,14 +136,14 @@ module.exports = {
     }
 
   });}
-    else if (req.param('q7')==1){
+    else if (req.param('q7')==1){                                 // the same as prev but for real time and latest date creation is sent continiously back to map
       if(req.param('q8')!=''&&req.param('q8')!='xyz'){
         var createtime3 = new Date(req.param('q8')).toISOString();
         time['$or']=[{"createdAt":{$gt:createtime3}}];
-        listy4.push(time);
+        allquery_list.push(time);
       }
-      console.log(listy4)
-      dict5['$and']=listy4;
+      console.log(allquery_list)
+      dict5['$and']=allquery_list;
       Sim.find().where(dict5).exec(function(err,sim){
         if(err){
           res.send(500,{error: 'Database Error'});
@@ -171,13 +165,13 @@ module.exports = {
       });
     }
   }, 
-mainf:function(req,res){                           // finding all the labels associated with the category   
- sails.config.myconf.collectioncode=req.param('code');
+mainf:function(req,res){                                       // finding all the labels associated with the category   
+ sails.config.myconf.collectioncode=req.param('code');         //get the collection code
  var respose=[];
  console.log(req.param('code'));
  respose.push((req.param('code')));
  Sim.native(function(err,coll){
-  coll.distinct("image_damage_class",{"code" :req.param('code') },function(err,result){
+  coll.distinct("image_damage_class",{"code" :req.param('code') },function(err,result){   //get all distinct values of labels for image damage class
     respose.push(result.length);
     for(var i=0;i<result.length;i++){
       if(result[i]==''){
@@ -189,7 +183,7 @@ mainf:function(req,res){                           // finding all the labels ass
         sails.config.myconf.displayseverity="Severity: ";
       }
     }
-    coll.distinct("aidr_class_label",{"code" :req.param('code') }, function(err,result1){
+    coll.distinct("aidr_class_label",{"code" :req.param('code') }, function(err,result1){ //get all distinct values of labels for aidr 
      respose.push(result1.length);
      for(var i=0;i<result1.length;i++){
       if(result1[i]==''){
@@ -201,7 +195,7 @@ mainf:function(req,res){                           // finding all the labels ass
         sails.config.myconf.displayaidr="Humanitarian Category: ";
       }
     }
-    coll.distinct("sentiment",{"code" :req.param('code') }, function(err,result2){
+    coll.distinct("sentiment",{"code" :req.param('code') }, function(err,result2){     //get all distinct values of labels for sentiment
      respose.push(result2.length);
      for(var i=0;i<result2.length;i++){
       if(result2[i]==''){
@@ -213,7 +207,7 @@ mainf:function(req,res){                           // finding all the labels ass
         sails.config.myconf.displaysentiment="Sentiment: ";
       }
     }
-    coll.distinct("image_physical_location",{"code" :req.param('code') }, function(err,result3){
+    coll.distinct("image_physical_location",{"code" :req.param('code') }, function(err,result3){  //check whether there are entries with images or not
       console.log('j');
       if(result3.length==0){
         respose.push(0);
@@ -227,7 +221,7 @@ mainf:function(req,res){                           // finding all the labels ass
       }
 
       console.log(respose)
-      res.view('map',{respose:respose});
+      res.view('map',{respose:respose});                         //send the label array back to map
     });
   });
   });

@@ -13,13 +13,13 @@
  function searchURL() {
   var value = document.getElementById('searchTxt').value;
   var inn=io.sails.connect();
-  var qu1='/tweets/findcoll?q1=1';
+  var qu1='/tweets/findcoll?q1=1';    //get collection code from findcoll function
   inn.get(qu1, function (resData, jwres){
-    if (resData.resu.includes(value)){
+    if (resData.resu.includes(value)){                //only proceed if the collection code is valid
       console.log(typeof(value));
-      return window.location='/tweets/mainf?code='+value;
+      return window.location='/tweets/mainf?code='+value;    //get different labels and send it to map
     }
-    else{
+    else{                                                      //do nothing if the collection code is invalid
 
     }
 
