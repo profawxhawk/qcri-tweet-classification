@@ -1,32 +1,7 @@
-
 <% title = 'Choose Classification Code' %>
-
-
  <div class="bg">
-  <!-- input text box and submit button -->
-  <input class="btn2" type="text" name="code" id="searchTxt">
-  <button class="btn" onClick="return searchURL()">Submit</button>
-
-</div> 
-<!-- This checks that whatever you enter in the text box is existing, and then navigates you to the right url -->
-<script>
- function searchURL() {
-  var value = document.getElementById('searchTxt').value;
-  var inn=io.sails.connect();
-  var qu1='/tweets/findcoll?q1=1';    //get collection code from findcoll function
-  inn.get(qu1, function (resData, jwres){
-    if (resData.resu.includes(value)){                //only proceed if the collection code is valid
-      console.log(typeof(value));
-      return window.location='/tweets/mainf?code='+value;    //get different labels and send it to map
-    }
-    else{                                                      //do nothing if the collection code is invalid
-
-    }
-
-  });
-
-}
-</script>
-
-
-
+  <form method="post" action="/verify">
+    <input class="text_field" type="text" name="code" id="searchTxt">
+    <button type="submit" class="btn">Submit</button>
+  <form>
+</div>
