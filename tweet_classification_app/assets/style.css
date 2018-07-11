@@ -1,14 +1,61 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.bg {
+
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  background-image: url('tweet.png');
+  background-size:100% 100%;
+  background-repeat: no-repeat;
+}
+
+
+.bg .btn {
+  position: absolute;
+  top: 38%;
+  left: 76%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #555;
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.bg .text_field {
+  width: 220px;
+  height: 32px;
+  position: absolute;
+  top: 38%;
+  left: 61%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+.bg.btn:hover {
+  background-color: black;
+}
+
 
 .CourseHeader
 {
-  margin-left:10px; 
+  margin-left:10px;
   font-size:30px;
   cursor:pointer
 }
 
 .CourseHeader.Black
 {
-  margin-left:10px; 
+  margin-left:10px;
   font-size:0px;
   cursor:pointer
 }
@@ -33,27 +80,27 @@
 }
 
 .severity {
- zoom: 1.5;
- width: 70px;
- height: auto;
+  zoom: 1.5;
+  width: 70px;
+  height: auto;
 }
 
 .aidr{
- zoom: 1.5;
- width: 70px;
- height: auto;
+  zoom: 1.5;
+  width: 70px;
+  height: auto;
 }
 
 .sentiment{
- zoom: 1.5;
- width: 70px;
- height: auto;
+  zoom: 1.5;
+  width: 70px;
+  height: auto;
 }
 
 .image{
- zoom: 1.5;
- width: 70px;
- height: auto;
+  zoom: 1.5;
+  width: 70px;
+  height: auto;
 }
 
 body {
@@ -133,7 +180,7 @@ html, body, #map {
 }
 
 .active, .accordion:hover {
-  background-color: #50b036; 
+  background-color: #50b036;
 }
 
 .accordion:after {
@@ -196,74 +243,74 @@ input{
   width:20px;
 
   position:relative;
-  left: 200px; 
+  left: 200px;
 
-  vertical-align:middle; 
+  vertical-align:middle;
 }
 
 
-label{  
-  width:200px;       
+label{
+  width:200px;
 
   position:relative;
   left: -20px;
 
-  display:inline-block;    
-  vertical-align:middle; 
+  display:inline-block;
+  vertical-align:middle;
 }
 .slidecontainer {
- 
- width: 100%;
+
+  width: 100%;
 }
 
 .slider {
- position: relative;
- left: 110px;
- -webkit-appearance: none;
- width: 50%;
- height: 15px;
- border-radius: 5px;
- background: #d3d3d3;
- outline: none;
- opacity: 0.7;
- -webkit-transition: .2s;
- transition: opacity .2s;
+  position: relative;
+  left: 110px;
+  -webkit-appearance: none;
+  width: 50%;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
 }
 
 .slider:hover {
- opacity: 1;
+  opacity: 1;
 }
 
 .slider::-webkit-slider-thumb {
- -webkit-appearance: none;
- appearance: none;
- width: 25px;
- height: 25px;
- border-radius: 50%;
- background: #4CAF50;
- cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
- width: 25px;
- height: 25px;
- border-radius: 50%;
- background: #4CAF50;
- cursor: pointer;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
 }
 .smallbutton{
 
- width: 20px;
- height:20px;
- padding: 3px;
- border: 5px solid #479a37;
- background-color: rgb(255, 255, 255);
- margin: 0;
+  width: 20px;
+  height:20px;
+  padding: 3px;
+  border: 5px solid #479a37;
+  background-color: rgb(255, 255, 255);
+  margin: 0;
 }
 .paralign{
- margin-top: 20px;
- position: relative;
- left: 208px;
+  margin-top: 20px;
+  position: relative;
+  left: 208px;
 }
 /* width */
 ::-webkit-scrollbar {
@@ -272,15 +319,15 @@ label{
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
