@@ -108,7 +108,7 @@ module.exports = {
 	    var code_dict_query={}; 
 
 	    code_dict_query['$or']=[{
-	    	"code":req.param('q9').   // dict query for collection code
+	    	"code":req.param('q9')   // dict query for collection code
 	    }];                    
 
 	    allquery_list.push(code_dict_query);  //push all the intermediate dictionary queries in to a single list : collection code
