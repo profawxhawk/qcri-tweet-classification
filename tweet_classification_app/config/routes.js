@@ -42,7 +42,13 @@ module.exports.routes = {
 	'POST /verify': {
 		controller: 'TweetsController',
 		action: 'findcoll',
-	}
+	},
+	'/test': {
+		view: 'test',
+		locals: {
+			layout: null,
+		},
+	},
 
 
 
