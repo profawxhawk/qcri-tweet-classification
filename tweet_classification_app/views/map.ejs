@@ -4,15 +4,17 @@
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
   <!-- The key is an image,so depending on the collection code we are displaying the right key -->
   <!-- You can change this so that the markers image are constant, and you just change the text boxes -->
-  <%if (sails.config.myconf.collectioncode == "170826213907_hurricane_harvey_2017") {%>
-  <%sails.config.myconf.image = "/harveykey.png";%>
-  <% }%>
-  <%if (sails.config.myconf.collectioncode == "3345134690_Queensland_flood_2013") {%>
-  <%sails.config.myconf.image = "/queenslandkey.png";%>
-  <% }%>
+  <% if (sails.config.myconf.collectioncode == "170826213907_hurricane_harvey_2017") { %>
+  <% sails.config.myconf.image = "/harveykey.png"; %>
+  <% } %>
+  <% if (sails.config.myconf.collectioncode == "3345134690_Queensland_flood_2013") { %>
+  <% sails.config.myconf.image = "/queenslandkey.png"; %>
+  <% } %>
   <!-- Start button enables a link so that the simulator begins, next to the button the key is displayed -->
-  <center><button onclick="if (this.value == 'Start') return Action(this);" type="buttons" value="Start" style=" margin-top: 10px; position: absolute; left: 10%; top: 40; width: 65px;" id="allbus" class="btn btn-success"> Start
-  </button><img src='<%=sails.config.myconf.image %>'style="margin-top: 10px; position: absolute; left: 36%; top: 40; width: 140px;"></center>
+  <center>
+    <button onclick="if (this.value == 'Start') return Action(this);" type="buttons" value="Start" style=" margin-top: 10px; position: absolute; left: 10%; top: 40; width: 65px;" id="allbus" class="btn btn-success"> Start</button>
+    <img src='<%=sails.config.myconf.image %>'style="margin-top: 10px; position: absolute; left: 36%; top: 40; width: 140px;">
+  </center>
   <br>
   <br>
   <br>
