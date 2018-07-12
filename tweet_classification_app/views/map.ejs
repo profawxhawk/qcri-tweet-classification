@@ -1,55 +1,54 @@
 <% title = 'Tweet Classification' %>
 
+<script src = "/map_helpers.js"></script>
+
 <div id="myNav" class="overlay">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
   <!-- The key is an image,so depending on the collection code we are displaying the right key -->
   <!-- You can change this so that the markers image are constant, and you just change the text boxes -->
   <% if (sails.config.myconf.collectioncode == "170826213907_hurricane_harvey_2017") { %>
     <% sails.config.myconf.image = "/harveykey.png"; %>
-      <% } %>
-        <% if (sails.config.myconf.collectioncode == "3345134690_Queensland_flood_2013") { %>
-          <% sails.config.myconf.image = "/queenslandkey.png"; %>
-            <% } %>
-              <!-- Start button enables a link so that the simulator begins, next to the button the key is displayed -->
-              <button onclick="if (this.value == 'Start') return Action(this);" type="buttons" value="Start" style=" margin-top: 10px; position: absolute; left: 10%; top: 40; width: 65px;" id="allbus" class="btn btn-success"> Start</button>
-              <img src='<%=sails.config.myconf.image %>' style="margin-top: 10px; position: absolute; left: 36%; top: 40; width: 140px;">
-              <br>
-              <br>
-              <br>
-              <br>
-              <br>
-              <!-- Four categories are coded here, and it is user defined in the myconf file and is displayed here -->
-              <div id="hello">
-                <button class="accordion"><%=sails.config.myconf.filter1 %></button>
-                <div class="overlay-content" align="left" id="severitymaster"></div>
-                <div class="slidecontainer" id="slidecontainer1">
-                </div>
-              </div>
+  <% } %>
+  <% if (sails.config.myconf.collectioncode == "3345134690_Queensland_flood_2013") { %>
+    <% sails.config.myconf.image = "/queenslandkey.png"; %>
+  <% } %>
 
-              <div id="hello2">
-                <button class="accordion"><%=sails.config.myconf.filter2 %></button>
-                <div class="overlay-content" align="left" id="aidrmaster"></div>
-                <div class="slidecontainer" id="slidecontainer2"></div>
-              </div>
+  <!-- Start button enables a link so that the simulator begins, next to the button the key is displayed -->
+  <button onclick="if (this.value == 'Start') return Action(this);" type="buttons" value="Start" style=" margin-top: 10px; position: absolute; left: 10%; top: 40; width: 65px;" id="allbus" class="btn btn-success"> Start</button>
+  <img src='<%=sails.config.myconf.image %>' style="margin-top: 10px; position: absolute; left: 36%; top: 40; width: 140px;">
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <!-- Four categories are coded here, and it is user defined in the myconf file and is displayed here -->
+  <div id="hello">
+    <button class="accordion"><%=sails.config.myconf.filter1 %></button>
+    <div class="overlay-content" align="left" id="severitymaster"></div>
+    <div class="slidecontainer" id="slidecontainer1">
+    </div>
+  </div>
 
-              <div id="hello3">
-                <button class="accordion"><%=sails.config.myconf.filter3 %></button>
-                <div class="overlay-content" align="left" id="sentimentmaster"></div>
-                <div class="slidecontainer" id="slidecontainer3"></div>
-              </div>
+  <div id="hello2">
+    <button class="accordion"><%=sails.config.myconf.filter2 %></button>
+    <div class="overlay-content" align="left" id="aidrmaster"></div>
+    <div class="slidecontainer" id="slidecontainer2"></div>
+  </div>
 
-              <div id="hello4">
-                <button class="accordion"><%=sails.config.myconf.filter4 %></button>
-                <div class="overlay-content" align="left" id="imagemaster"></div>
-              </div>
+  <div id="hello3">
+    <button class="accordion"><%=sails.config.myconf.filter3 %></button>
+    <div class="overlay-content" align="left" id="sentimentmaster"></div>
+    <div class="slidecontainer" id="slidecontainer3"></div>
+  </div>
+
+  <div id="hello4">
+    <button class="accordion"><%=sails.config.myconf.filter4 %></button>
+    <div class="overlay-content" align="left" id="imagemaster"></div>
+  </div>
 
 </div>
 
 <script>
-  // connecting to socket.io to get data from sim
-
-  var outer = io.sails.connect();
-  var inner = io.sails.connect();
 
   var collection_code = '<%=respose[0]%>';
   var query_code = '';
@@ -72,22 +71,6 @@
     });
   }
 
-  // Start button enables the simulator
-
-  var windoww = "";
-
-  function Action(el) {
-
-    my_window = window.open('http://localhost:1337/sim/add', '', 'width=,height=,resizable=no');
-    windoww = my_window;
-    my_window.focus();
-
-    if (el.value === "Start")
-      el.value = "Stop";
-    else
-      el.value = "Start";
-
-  }
 </script>
 
 <!-- This displays the map -->
@@ -110,77 +93,7 @@
 
 </div>
 
-<!-- This takes the labels from the database which have underscores and removes them, and capitalizes the first character -->
 <script>
-
-  function labelize(str) {
-    str = str.split("_").join(" ");
-    var splitStr = str.toLowerCase().split(" ");
-    for (var i = 0; i < splitStr.length; i++) {
-      if (splitStr[i] != "and" && splitStr[i] != "or") {
-        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-      }
-    }
-    return splitStr.join(' ');
-  }
-
-  function unlabelize(str) {
-    str = str.split(" ").join("_");
-    return str.toLowerCase();
-  }
-
-  // open the navigation bar
-  function openNav() {
-    $("#SpanHeader").toggleClass("Black");
-    $("#SpanHeader2").toggleClass("Black");
-    document.getElementById("myNav").style.width = "30%";
-
-  }
-  // close the navigation bar
-  function closeNav() {
-    $("#SpanHeader").removeClass("Black");
-    $("#SpanHeader2").toggleClass("Black");
-    document.getElementById("myNav").style.width = "0%";
-  }
-  // this is required for the map to be displayed
-  var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-    '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
-  // street and satellite view from mapbox
-  var streets = L.tileLayer(mbUrl, {
-    id: 'mapbox.streets',
-    attribution: mbAttr
-  });
-  var satellite = L.tileLayer(mbUrl, {
-    id: 'mapbox.streets-satellite',
-    attribution: mbAttr
-  });
-
-  // Green  marker
-  var myIcon = L.ExtraMarkers.icon({
-    icon: 'fa-circle-o',
-    iconShape: 'circle',
-    markerColor: 'green',
-    prefix: 'fa'
-  });
-
-  // Yellow color marker
-  var myIcon2 = L.ExtraMarkers.icon({
-    icon: 'fa-circle-o',
-    iconShape: 'circle',
-    markerColor: 'yellow',
-    prefix: 'fa'
-  });
-  // Red color marker
-  var myIcon3 = L.ExtraMarkers.icon({
-    icon: 'fa-circle-o',
-    iconShape: 'circle',
-    markerColor: 'red',
-    prefix: 'fa'
-  });
-
-  var mcg = L.markerClusterGroup();
 
   // setting the map with different properties + different layers
   var map = L.map('map', {
@@ -191,14 +104,6 @@
     worldCopyJump: true,
   });
 
-  var baseLayers = {
-    "Streets": streets,
-    "Satellite": satellite
-  };
-  var overlays = {
-    "Markers": mcg
-  };
-
 
   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -206,7 +111,6 @@
   }).addTo(map);
 
   L.control.layers(baseLayers, overlays).addTo(map);
-
 
   function get1(qu, flag) {
 
@@ -223,14 +127,6 @@
         let sentiment = resData.sim[j].sentiment;
         let severity = resData.sim[j].image_damage_class;
         // this takes the url part fo tweet text and makes it a hyperlink
-
-        function linkify(tweet) {
-          var link_index = tweet.lastIndexOf('https://');
-          var tweet_words = tweet.substring(link_index);
-          tweet_words = tweet_words.split(" ");
-          var link = tweet_words[0].replace(/['"]+/g, '');
-          return link;
-        }
 
         var a = linkify(text1);
         var senti = '';
@@ -520,29 +416,8 @@
     });
   }
 
-  function dyrender(s1, s2, s3) {
-    var num = document.getElementById(s1);
-    var td = document.createElement('td');
-    var tr = document.createElement('tr');
-    var h4 = document.createElement('h4');
-    var div = document.createElement('div');
-    div.id = s2;
-    var txt = document.createTextNode(s3);
-    h4.appendChild(txt);
-    td.appendChild(h4);
-    tr.appendChild(td);
-    num.appendChild(tr);
-    td = document.createElement('td');
-    tr = document.createElement('tr');
-    td.appendChild(div);
-    tr.appendChild(td);
-    num.appendChild(tr);
-    td = document.createElement('td');
-    tr = document.createElement('tr');
-    td.appendChild(document.createTextNode('\u00A0'));
-    tr.appendChild(td);
-    num.appendChild(tr);
-  }
+
+
 </script>
 
 <div>
@@ -798,6 +673,9 @@
     slider2.onmouseup = function() {
       task(event);
     }
+
+    // <!-- Load the slider  -->
+
     // <!-- For aidr, sentiment and image damage class, we find which checboxes are checked so that we can query appropriately -->
     // <!-- These are stored in str, str2, str3 -->
     // <!-- Then an appropriate query is written - query1, query2 and query3 -->
@@ -903,7 +781,6 @@
       get1(qu, 0);
     }
 
-    // <!-- Load the slider  -->
 
     window.onload = function() {
       get1('/tweets/filteror?q1=' + '' + '&q2=' + '' + '&q3=' + '' + '&q4=' + '' + '&q5=' + 0 + '&q7=' + 0 + '&q9=' + collection_code + '&q10=' + document.getElementById("demon").innerHTML + '&q11=' + document
