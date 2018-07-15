@@ -13,24 +13,24 @@ module.exports = {
 		var url;
 		var tweet_text;
 		var twitterdata =[];
-    
-		function timer() 
+
+		function timer()
 		{
 	    	return nIntervId1 = setInterval(generate, 500); //generates a tweet every 0.5 seconds
 	    }
 
 	    function getRandom(min, max) {
-  			return (Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+  			return (Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
   		}
 
   		function getRandomIntInclusive(min, max) {
   			min = Math.ceil(min);
   			max = Math.floor(max);
-  			return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+  			return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
   		}
 
 
-  		function generate() {	
+  		function generate() {
   			if (sails.config.myconf.collectioncode == "3345134690_Queensland_flood_2013"){
 
   				var image_damage_class1 = ['Minor','Moderate','Major'];
@@ -69,7 +69,6 @@ module.exports = {
   			tweet_text = sails.config.myconf.tweet+ '';
   			sample_long = sails.config.myconf.long + '';
   			sample_lat = sails.config.myconf.lat + '';
-  			console.log();
   			code = sails.config.myconf.collectioncode;
   			url = randomGenerate(url1);
 
@@ -85,4 +84,3 @@ module.exports = {
   	}
 
   };
-

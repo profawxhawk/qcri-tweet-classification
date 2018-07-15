@@ -4,53 +4,61 @@
 
 <div id="myNav" class="overlay">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <!-- The key is an image,so depending on the collection code we are displaying the right key -->
-  <!-- You can change this so that the markers image are constant, and you just change the text boxes -->
-  <% if (sails.config.myconf.collectioncode == "170826213907_hurricane_harvey_2017") { %>
-    <% sails.config.myconf.image = "/harveykey.png"; %>
-  <% } %>
-  <% if (sails.config.myconf.collectioncode == "3345134690_Queensland_flood_2013") { %>
-    <% sails.config.myconf.image = "/queenslandkey.png"; %>
-  <% } %>
 
-  <!-- Start button enables a link so that the simulator begins, next to the button the key is displayed -->
-  <button onclick="if (this.value == 'Start') return Action(this);" type="buttons" value="Start" style=" margin-top: 10px; position: absolute; left: 10%; top: 40; width: 65px;" id="allbus" class="btn btn-success"> Start</button>
-  <img src='<%=sails.config.myconf.image %>' style="margin-top: 10px; position: absolute; left: 36%; top: 40; width: 140px;">
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
   <!-- Four categories are coded here, and it is user defined in the myconf file and is displayed here -->
-  <div id="hello">
+  <div id="damage_slider">
     <button class="accordion"><%=sails.config.myconf.filter1 %></button>
     <div class="overlay-content" align="left" id="severitymaster"></div>
-    <div class="slidecontainer" id="slidecontainer1">
+    <div class="slidecontainer" id="damage_slider_container">
     </div>
   </div>
 
-  <div id="hello2">
+  <div id="class_slider">
     <button class="accordion"><%=sails.config.myconf.filter2 %></button>
     <div class="overlay-content" align="left" id="aidrmaster"></div>
-    <div class="slidecontainer" id="slidecontainer2"></div>
+    <div class="slidecontainer" id="class_slider_container"></div>
   </div>
 
-  <div id="hello3">
+  <div id="sentiment_slider">
     <button class="accordion"><%=sails.config.myconf.filter3 %></button>
     <div class="overlay-content" align="left" id="sentimentmaster"></div>
-    <div class="slidecontainer" id="slidecontainer3"></div>
+    <div class="slidecontainer" id="sentiment_slider_container"></div>
   </div>
 
-  <div id="hello4">
+  <div id="image_existence">
     <button class="accordion"><%=sails.config.myconf.filter4 %></button>
     <div class="overlay-content" align="left" id="imagemaster"></div>
   </div>
 
 </div>
 
+<!-- This displays the map -->
+<div id="map">
+
+  <br>
+  <br>
+  <br>
+  <br>
+
+  <div class="btn-group" style="z-index: 401">
+    <!-- Use 401 to be between map and controls-->
+    <!-- This is the three lines that opens the filters -->
+    <span id="SpanHeader" class="CourseHeader" onclick="openNav()">&#9776; &nbsp </span>
+    <!-- Click me image next to it -->
+    <img src="/click.png" id="SpanHeader2" class="CourseHeader2">
+  </div>
+
+</div>
+
 <script>
 
-  var collection_code = '<%=respose[0]%>';
+  var collection_code = '<%=packet.code%>';
+  var class_labels = '<%=packet.class_labels%>'.split(",");
+  var damage_labels = '<%=packet.damage_labels%>'.split(",");
+  var sentiment_labels = '<%=packet.sentiment_labels%>'.split(",");
+  var image_existence_labels = '<%=packet.image_existence_labels%>'.split(",");
+  var total_labels = class_labels.length+damage_labels.length+sentiment_labels.length+image_existence_labels.length;
+
   var query_code = '';
 
 
@@ -70,30 +78,6 @@
       }
     });
   }
-
-</script>
-
-<!-- This displays the map -->
-<div id="map">
-
-  <br>
-  <br>
-  <br>
-  <br>
-
-  <div class="btn-group" style="z-index: 401">
-    <!-- Use 401 to be between map and controls-->
-    <!-- This is the three lines that opens the filters -->
-    <span id="SpanHeader" class="CourseHeader" onclick="openNav()">&#9776; &nbsp </span>
-    <!-- Click me image next to it -->
-    <img src="/click.png" id="SpanHeader2" class="CourseHeader2">
-  </div>
-
-
-
-</div>
-
-<script>
 
   // setting the map with different properties + different layers
   var map = L.map('map', {
@@ -276,14 +260,7 @@
                 let sentimenti = resData1.sim[i].sentiment
                 let severityi = resData1.sim[i].image_damage_class
                 let txt1 = text1i;
-                // same as linkify function
-                function linkify1(text) {
-                  var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-                  return text.replace(urlRegex, function(url) {
-                    return '<a href="' + url + '" target="' + '_blank' + '"">' + url + '</a>';
-                  });
-                }
-                let ai = linkify1(txt1);
+                let ai = '<a href="' + linkify(txt1) + '" target="' + '_blank' + '"">' + linkify(txt1) + '</a>';
                 let sentii = '';
                 let aidi = '';
                 aidi = labelize(aidri);
@@ -418,25 +395,19 @@
 
 
 
-</script>
+  if(total_labels != 0){
 
-<div>
-  <% if(respose[respose.length-1]!=0){%>
-    <% if(respose[1]!=0){%>
-      <div id="something1" hidden='true'>
-        <%= respose[1] %>
-      </div>
+    if(damage_labels.length!=0){
 
-      <!-- severitymaster is the id of the div tag under the Severity category button.-->
-      <script>
+      //<!-- severitymaster is the id of the div tag under the Severity category button.-->
+
         dyrender('severitymaster', 'severity', '');
-      </script>
 
-      <!-- Creating the checkboxes and labels dynamically for severity -->
-      <% for(var i=2; i<(respose[1])+2; i++){ %>
-        <script>
+      //<!-- Creating the checkboxes and labels dynamically for severity -->
+        for(i in damage_labels){
+
           var slc1 = document.getElementById('severity');
-          var ele = '<%=respose[i]%>';
+          var ele = damage_labels[i];
           var checkbox = document.createElement("input");
           checkbox.type = "checkbox";
           checkbox.align = "left";
@@ -449,10 +420,10 @@
           label.setAttribute('style', 'color:#000000;');
           var te = ele;
           // if there is no severity, do not display anything
-          if (ele == "null" && document.getElementById("something1").innerText == 1) {
+          if (ele == "null" && damage_labels.length == 1) {
             te = "";
             checkbox.style.display = 'none';
-            var x = document.getElementById("hello");
+            var x = document.getElementById("damage_slider");
             x.innerHTML = "";
           }
 
@@ -468,11 +439,11 @@
           slc1.appendChild(label);
           slc1.appendChild(document.createElement("br"));
           checkbox.setAttribute("onClick", "task(event);");
-        </script>
-      <% }%>
 
-      <script>
-        var slid1 = document.getElementById('slidecontainer1');
+        }
+
+
+        var slid1 = document.getElementById('damage_slider_container');
         var slid1in = document.createElement('input');
         slid1in.type = "range"
         slid1in.className = "slider";
@@ -489,26 +460,19 @@
         slid1inp.appendChild(slid1inspan);
         slid1.appendChild(slid1in);
         slid1.appendChild(slid1inp);
-      </script>
 
-    <% }%>
 
-    <% if(respose[i]!=0){%>
+     }
 
-      <div id="something2" hidden='true'>
-        <%= respose[i] %>
-      </div>
-      <!-- aidrmaster is the id of the div tag under the AIDR Label category button.-->
+    if(class_labels.length!=0){
 
-      <script>
-        dyrender('aidrmaster', 'aidr', '');
-      </script>
+      //<!-- aidrmaster is the id of the div tag under the AIDR Label category button.-->
+      dyrender('aidrmaster', 'aidr', '');
 
-      <% for(var j=i+1; j<(respose[i])+i+1; j++){ %>
-        <!-- Creating the checkboxes and labels dynamically for aidr-->
-        <script>
+        for(i in class_labels){
+          //<!-- Creating the checkboxes and labels dynamically for aidr-->
           var slc2 = document.getElementById('aidr');
-          var ele = '<%=respose[j]%>';
+          var ele = class_labels[i];
           var check = labelize(ele);
           var checkbox = document.createElement("input");
           checkbox.type = "checkbox";
@@ -520,9 +484,9 @@
           label.htmlFor = ele;
 
           // if there is no aidr, do not display anything
-          if (ele == "null" && document.getElementById("something2").innerText == 1) {
+          if (ele == "null" && class_labels.length == 1) {
             checkbox.style.display = 'none';
-            var x = document.getElementById("hello2");
+            var x = document.getElementById("class_slider");
             x.innerHTML = "";
           };
 
@@ -530,10 +494,9 @@
           slc2.appendChild(label);
           slc2.appendChild(document.createElement("br"));
           checkbox.setAttribute("onClick", "task(event);");
-        </script>
-      <% }%>
-      <script>
-        var slid2 = document.getElementById('slidecontainer2');
+        }
+
+        var slid2 = document.getElementById('class_slider_container');
         var slid2in = document.createElement('input');
         slid2in.type = "range"
         slid2in.className = "slider";
@@ -550,26 +513,19 @@
         slid2inp.appendChild(slid2inspan);
         slid2.appendChild(slid2in);
         slid2.appendChild(slid2inp);
-      </script>
+    }
 
-    <% }%>
+    if(sentiment_labels.length!=0){
 
-    <% if(respose[j]!=0){%>
+      //<!-- sentimentmaster is the id of the div tag under the Sentiment category button.-->
+      dyrender('sentimentmaster', 'sentiment', '');
 
-      <div id="something3" hidden='true'>
-        <%= respose[j] %>
-      </div>
-      <!-- sentimentmaster is the id of the div tag under the Sentiment category button.-->
 
-      <script>
-        dyrender('sentimentmaster', 'sentiment', '');
-      </script>
+      for(i in sentiment_labels){
+        //<!-- Creating the checkboxes and labels dynamically for sentiment -->
 
-      <% for(var k=j+1; k<(respose[j])+j+1; k++){ %>
-        <!-- Creating the checkboxes and labels dynamically for sentiment -->
-        <script>
           var slc3 = document.getElementById('sentiment');
-          var ele = '<%=respose[k]%>';
+          var ele = sentiment_labels[i];
           var checkbox = document.createElement("input");
           checkbox.type = "checkbox";
           checkbox.className = "sentiment";
@@ -580,21 +536,20 @@
           label.setAttribute('style', 'color:#000000;');
           te = ele;
           // if there is no aidr, do not display anything
-          if (ele == "null" && document.getElementById("something3").innerText == 1) {
+          if (ele == "null" && sentiment_labels.length == 1) {
             te = "";
             checkbox.style.display = 'none';
-            var x = document.getElementById("hello3");
+            var x = document.getElementById("sentiment_slider");
             x.innerHTML = "";
           }
           label.appendChild(document.createTextNode(te));
           slc3.appendChild(label);
           slc3.appendChild(document.createElement("br"));
           checkbox.setAttribute("onClick", "task(event);");
-        </script>
-      <% }%>
 
-      <script>
-        var slid3 = document.getElementById('slidecontainer3');
+       }
+
+        var slid3 = document.getElementById('sentiment_slider_container');
         var slid3in = document.createElement('input');
         slid3in.type = "range"
         slid3in.className = "slider";
@@ -611,22 +566,16 @@
         slid3inp.appendChild(slid3inspan);
         slid3.appendChild(slid3in);
         slid3.appendChild(slid3inp);
-      </script>
-    <%}%>
 
-    <% if(respose[k]!=0){ %>
-      <div id="something4" hidden='true'>
-        <%= respose[k] %>
-      </div>
-      <!-- imagemaster is the id of the div tag under the Image category button.-->
-      <script>
+    }
+
+    if(image_existence_labels.length!=0){
+      //<!-- imagemaster is the id of the div tag under the Image category button.-->
         dyrender('imagemaster', 'image', '');
-      </script>
-      <% for(var l1=k+1; l1<(respose[k])+k+1; l1++){ %>
-        <!-- Creating the checkboxes and labels dynamically for sentiment -->
-        <script>
+      for(i in image_existence_labels){
+        //<!-- Creating the checkboxes and labels dynamically for sentiment -->
           var slc4 = document.getElementById("image");
-          var ele = '<%=respose[l1]%>';
+          var ele = image_existence_labels[i];
           var check =labelize(ele);
           var checkbox = document.createElement("input");
           checkbox.type = "checkbox";
@@ -640,12 +589,13 @@
           slc4.appendChild(label);
           slc4.appendChild(document.createElement("br"));
           checkbox.setAttribute("onClick", "task(event);");
-        </script>
-      <% }%>
-    <% }%>
-  <% }%>
-  <!-- Slider  -->
-  <script>
+       }
+     }
+
+   }
+
+  //<!-- Slider  -->
+
     var slider = document.getElementById("myRange");
     var output = document.getElementById("demon");
     output.innerHTML = slider.value;
@@ -686,7 +636,7 @@
       var checks = document.getElementsByClassName('severity');
       var str = '';
       if ('<%=sails.config.myconf.displayseverity %>' == "Severity: " || '<%=sails.config.myconf.displayseverity %>' == " ") {
-        for (i = 0; i < document.getElementById("something1").innerText; i++) {
+        for (i = 0; i < damage_labels.length; i++) {
 
           if (checks[i].checked === true) {
             str += checks[i].value + " ";
@@ -701,7 +651,7 @@
       var checks2 = document.getElementsByClassName('aidr');
       var str2 = '';
       if ('<%=sails.config.myconf.displayaidr %>' == "Humanitarian Category: " || '<%=sails.config.myconf.displayaidr %>' == " ") {
-        for (j = 0; j < document.getElementById("something2").innerText; j++) {
+        for (j = 0; j < class_labels.length; j++) {
           if (checks2[j].checked === true) {
             str2 += checks2[j].value + " ";
           }
@@ -715,7 +665,7 @@
       var checks3 = document.getElementsByClassName('sentiment');
       var str3 = '';
       if ('<%=sails.config.myconf.displaysentiment %>' == "Sentiment: " || '<%=sails.config.myconf.displaysentiment %>' == " ") {
-        for (k = 0; k < document.getElementById("something3").innerText; k++) {
+        for (k = 0; k < sentiment_labels.length; k++) {
 
           if (checks3[k].checked === true) {
             str3 += checks3[k].value + " ";
@@ -786,5 +736,4 @@
       get1('/tweets/filteror?q1=' + '' + '&q2=' + '' + '&q3=' + '' + '&q4=' + '' + '&q5=' + 0 + '&q7=' + 0 + '&q9=' + collection_code + '&q10=' + document.getElementById("demon").innerHTML + '&q11=' + document
         .getElementById("demon1").innerHTML + '&q12=' + document.getElementById("demon2").innerHTML + '&q8=' + 'xyz', 1);
     }
-  </script>
-</div>
+</script>
