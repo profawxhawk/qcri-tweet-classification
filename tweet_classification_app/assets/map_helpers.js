@@ -3,7 +3,6 @@
 var outer = io.sails.connect();
 var inner = io.sails.connect();
 
-
 // this is required for the map to be displayed
 var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
   '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
