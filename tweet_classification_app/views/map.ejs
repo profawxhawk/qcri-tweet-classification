@@ -1,69 +1,74 @@
 <% title = 'Tweet Classification' %>
 
-<div id="myNav" class="overlay">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div id="myNav" class="overlay">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <!-- The key is an image,so depending on the collection code we are displaying the right key -->
+    <!-- You can change this so that the markers image are constant, and you just change the text boxes -->
+    <!-- Start button enables a link so that the simulator begins, next to the button the key is displayed -->
+    <center><button onclick="if (this.value == 'Start') return Action(this);" type="buttons" value="Start" style=" margin-top: 10px; position: absolute; left: 10%; top: 40; width: 65px;" id="allbus" class="btn btn-success"> Start
+    </button></center>
 
-  <!-- Four categories are coded here, and it is user defined in the myconf file and is displayed here -->
-  <div id="damage_slider">
-    <button class="accordion"><%=sails.config.myconf.filter1 %></button>
-    <div class="overlay-content" align="left" id="severitymaster"></div>
-    <div class="slidecontainer" id="damage_slider_container">
+    <!-- Four categories are coded here, and it is user defined in the myconf file and is displayed here -->
+    <div id="damage_accordion">
+      <button class="accordion"><%=sails.config.myconf.filter1 %></button>
+      <div class="overlay-content" align="left" id="severitymaster"></div>
+      <div class="slidecontainer" id="slidecontainer1">
+      </div>
     </div>
+
+    <div id="class_accordion">
+      <button class="accordion"><%=sails.config.myconf.filter2 %></button>
+      <div class="overlay-content" align="left" id="aidrmaster"></div>
+      <div class="slidecontainer" id="slidecontainer2">
+      </div>
+    </div>
+
+    <div id="sentiment_accordion">
+      <button class="accordion"><%=sails.config.myconf.filter3 %></button>
+      <div class="overlay-content" align="left" id="sentimentmaster"></div>
+      <div class="slidecontainer" id="slidecontainer3">
+      </div>
+    </div>
+    <div id="image_existence_accordion">
+      <button class="accordion"><%=sails.config.myconf.filter4 %></button>
+      <div class="overlay-content" align="left" id="imagemaster"></div>
+    </div>
+
   </div>
 
-  <div id="class_slider">
-    <button class="accordion"><%=sails.config.myconf.filter2 %></button>
-    <div class="overlay-content" align="left" id="aidrmaster"></div>
-    <div class="slidecontainer" id="class_slider_container"></div>
+  <!-- This displays the map -->
+  <div id="map">
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div class="btn-group" style="z-index: 401">
+      <!-- Use 401 to be between map and controls-->
+      <!-- This is the three lines that opens the filters -->
+      <span id="SpanHeader" class="CourseHeader" onclick="openNav()">&#9776; &nbsp </span>
+      <!-- Click me image next to it -->
+      <img src="/click.png" id="SpanHeader2" class="CourseHeader2">
+    </div>
+
+
+
   </div>
 
-  <div id="sentiment_slider">
-    <button class="accordion"><%=sails.config.myconf.filter3 %></button>
-    <div class="overlay-content" align="left" id="sentimentmaster"></div>
-    <div class="slidecontainer" id="sentiment_slider_container"></div>
-  </div>
+  <script src = "/interface.js"></script>
 
-  <div id="image_existence">
-    <button class="accordion"><%=sails.config.myconf.filter4 %></button>
-    <div class="overlay-content" align="left" id="imagemaster"></div>
-  </div>
-
-</div>
-
-<!-- This displays the map -->
-<div id="map">
-
-  <br>
-  <br>
-  <br>
-  <br>
-
-  <div class="btn-group" style="z-index: 401">
-    <!-- Use 401 to be between map and controls-->
-    <!-- This is the three lines that opens the filters -->
-    <span id="SpanHeader" class="CourseHeader" onclick="openNav()">&#9776; &nbsp </span>
-    <!-- Click me image next to it -->
-    <img src="/click.png" id="SpanHeader2" class="CourseHeader2">
-  </div>
-
-</div>
-
-<script src = "/map_helpers.js"></script>
-
-<script>
-
-  var collection_code = '<%=packet.code%>';
-  var class_labels = '<%=packet.class_labels%>'.split(",");
-  var damage_labels = '<%=packet.damage_labels%>'.split(",");
-  var sentiment_labels = '<%=packet.sentiment_labels%>'.split(",");
-  var image_existence_labels = '<%=packet.image_existence_labels%>'.split(",");
-  var total_labels = class_labels.length+damage_labels.length+sentiment_labels.length+image_existence_labels.length;
-  var display_sentiment = '<%= sails.config.myconf.displaysentiment %>';
-  var display_severity = '<%= sails.config.myconf.displayseverity %>';
-  var display_aidr = '<%= sails.config.myconf.displayaidr %>';
-
-  data(collection_code, class_labels, damage_labels, sentiment_labels, image_existence_labels);
-  localizer(display_sentiment, display_severity, display_aidr);
-  fillupAccordions();
-
-</script>
+  <script>
+    var query_code = '';
+    var collection_code = '<%=packet.code%>';
+    var class_labels = '<%=packet.class_labels%>'.split(",");
+    var damage_labels = '<%=packet.damage_labels%>'.split(",");
+    var sentiment_labels = '<%=packet.sentiment_labels%>'.split(",");
+    var image_existence_labels = '<%=packet.image_existence_labels%>'.split(",");
+    var display_sentiment = '<%= sails.config.myconf.displaysentiment %>';
+    var display_severity = '<%= sails.config.myconf.displayseverity %>';
+    var display_aidr = '<%= sails.config.myconf.displayaidr %>';
+    data(collection_code, class_labels, damage_labels, sentiment_labels, image_existence_labels);
+    localizer(display_sentiment, display_severity, display_aidr);
+    fillupAccordions();
+  </script>
