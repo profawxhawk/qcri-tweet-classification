@@ -80,6 +80,7 @@ L.control.layers(baseLayers, overlays).addTo(map);
 
 
 // Start button enables the simulator
+
 var windoww = "";
 
 function localizer(sentiment_tag, severity_tag, aidr_tag) {
@@ -128,6 +129,10 @@ function closeNav() {
 
 
 function tweet_loader(qu, flag) {
+  var timer = 5000;
+  if(flag == 1){
+    timer = 0;
+  }
   var loader = setInterval(
     function() {
       sockets.outer.get(qu, function(resData, jwres) {
@@ -176,7 +181,7 @@ function tweet_loader(qu, flag) {
     if(flag == 1){
       clearInterval(loader);
     }
-  }, 5000);
+  }, timer);
 }
 
 function dyrender(s1, s2, s3) {
