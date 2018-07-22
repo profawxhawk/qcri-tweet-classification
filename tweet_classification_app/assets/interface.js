@@ -37,8 +37,6 @@ var colors = {
   'negative': 'red',
 }
 
-
-
 var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
   '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
   'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -69,8 +67,6 @@ var map = L.map('map', {
   zoom: 2,
   layers: [streets, mcg]
 });
-// layergroup is a constrctor for storing the markers
-//var markerGroup = L.layerGroup();
 
 // setting the map with diffrent properties + different layers
 L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -80,7 +76,7 @@ L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 L.control.layers(baseLayers, overlays).addTo(map);
 
-//Accrodian are the collapsable and expandable categories in green
+//Accordions are the collapsable and expandable categories in green
 
 
 // Start button enables the simulator
@@ -129,289 +125,58 @@ function closeNav() {
   $("#SpanHeader2").toggleClass("Black");
   document.getElementById("myNav").style.width = "0%";
 }
-// Green  marker
 
-function get1(qu, flag) {
-  sockets.outer.get(qu, function(resData, jwres) {
-    mcg.clearLayers();
-    map.addLayer(mcg);
-    for (let j = 0; j < resData.sim.length; j++) {
-      let lati = resData.sim[j].latitude;
-      let long = resData.sim[j].longitude;
-      let text1 = resData.sim[j].tweet_text;
-      let img = resData.sim[j].image_physical_location;
-      let aidr = resData.sim[j].aidr_class_label;
-      let sentiment = resData.sim[j].sentiment;
-      let severity = resData.sim[j].image_damage_class;
-      // this takes the url part fo tweet text and makes it a hyperlink
 
-      var a = linkify(text1);
-      var senti = '';
-      var aid = '';
-      aid = labelize(aidr);
-      let tweet_marker = lazyMarkers(aid, sentiment);
-      // in the database, the records that are null for severity, we set it to unknown, and those which say None we set it to Zero
-      if (severity == '') {
-        severity = "Unkown";
-      }
-      if (severity == 'None') {
-        severity = "Zero";
-      }
-      var popup = L.popup();
-      // popoup for markers with an image
-      function onMapClick() {
-        popup
-          .setLatLng([long, lati])
-          .setContent('<p>' + a + '</p>' + "<a target='" + '_blank' + "' href='" + img + "'><img class='size'  src='" + img + "'/></a>" + '<p>' + '<b>' + locals.display_aidr + '</b>' + aid + '</p>' + '<p>' + '<b>' +
-            locals.display_sentiment + '</b>' + sentiment + '</p>' + '<p>' + '<b>' + locals.display_severity + '</b>' + severity + '</p>')
-          .addTo(map);
-      }
-      // popoup for markers without an image
-      function onMapClick2() {
-        popup
-          .setLatLng([long, lati])
-          .setContent('<p>' + a + '</p>' + '<p>' + '<b>' + locals.display_aidr + '</b>' + aid + '</p>' + '<p>' + '<b>' + locals.display_sentiment + '</b>' + sentiment + '</p>' + '<p>' + '<b>' +
-            locals.display_severity + '</b>' + severity + '</p>')
-          .addTo(map);
-      }
-      // for each severity there are two cases- with and without image. Here we are just creating the marker and adding it to a markerGroup
-      if (severity == ('None')) {
-        if (img == '') {
-          little = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little.on('click', onMapClick2);
-        } else {
-          little1 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little1.on('click', onMapClick);
+function tweet_loader(qu, flag) {
+  var loader = setInterval(
+    function() {
+      sockets.outer.get(qu, function(resData, jwres) {
+      for (i in resData.sim) {
+        let latitude = resData.sim[i].latitude;
+        let longitude = resData.sim[i].longitude;
+        let tweet_text = resData.sim[i].tweet_text;
+        let img_src = resData.sim[i].image_physical_location;
+        let class_label = labelize(resData.sim[i].aidr_class_label);
+        let sentiment_label = resData.sim[i].sentiment;
+        let severity_label = resData.sim[i].image_damage_class;
+
+        var tweet_link = linkify(tweet_text);
+
+        let tweet_marker = lazyMarkers(class_label, sentiment_label);
+
+        var marker = new L.marker([longitude, latitude], {
+          icon: tweet_marker
+        }).addTo(mcg);
+
+        // in the database, the records that are null for severity, we set it to unknown, and those which say None we set it to Zero
+        if (severity_label == '') {
+          severity_label = "Unknown";
         }
-      } else if (severity == 'Mild') {
-        if (img == '') {
-          little2 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little2.on('click', onMapClick2);
-        } else {
-          little3 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little3.on('click', onMapClick);
+        if (severity_label == 'None') {
+          severity_label = "Zero";
         }
-      } else if (severity == 'Severe') {
-        if (img == '') {
-          little4 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little4.on('click', onMapClick2);
+
+        if(img_src != ''){
+          marker.bindPopup('<p>' + tweet_link + '</p>' + "<a target='" + '_blank' + "' href='" + img_src + "'><img class='size'  src='" + img_src + "'/></a>" + '<p>' + '<b>' + locals.display_aidr + '</b>' + class_label + '</p>' + '<p>' + '<b>' +
+            locals.display_sentiment + '</b>' + sentiment_label + '</p>' + '<p>' + '<b>' + locals.display_severity + '</b>' + severity_label + '</p>');
         } else {
-          little5 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little5.on('click', onMapClick);
-        }
-      } else if (severity == 'Minor') {
-        if (img == '') {
-          little41 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little41.on('click', onMapClick2);
-        } else {
-          little51 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little51.on('click', onMapClick);
-        }
-      } else if (severity == 'Moderate') {
-        if (img == '') {
-          little42 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little42.on('click', onMapClick2);
-        } else {
-          little52 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little52.on('click', onMapClick);
-        }
-      } else if (severity == 'Major') {
-        if (img == '') {
-          little43 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little43.on('click', onMapClick2);
-        } else {
-          little53 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little53.on('click', onMapClick);
-        }
-      } else {
-        if (img == '') {
-          little6 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little6.on('click', onMapClick2);
-        } else {
-          little7 = new L.marker([long, lati], {
-            icon: tweet_marker
-          }).addTo(mcg);
-          little7.on('click', onMapClick);
+          marker.bindPopup('<p>' + tweet_link + '</p>' + '<p>' + '<b>' + locals.display_aidr + '</b>' + class_label + '</p>' + '<p>' + '<b>' + locals.display_sentiment + '</b>' + sentiment_label + '</p>' + '<p>' + '<b>' +
+            locals.display_severity + '</b>' + severity_label + '</p>');
         }
       }
+      // this is to ensure the querying is done for new markers only
+      if (resData.sim.length != 0) {
+        let new_time = resData.sim[0].createtime;
+        let curr_query = query_code;
+        var index = curr_query.indexOf("q8");
+        var new_query = curr_query.replace(curr_query.substring(index + 3), new_time);
+        query_code = new_query;
+      }
+    });
+    if(flag == 1){
+      clearInterval(loader);
     }
-    // this is to ensure the querying is done for new markers only
-    if (resData.sim.length != 0) {
-      let createtime1 = resData.sim[0].createtime;
-      let vep = query_code;
-      var n = vep.indexOf("q8");
-      var res = vep.replace(vep.substring(n + 3), createtime1);
-      query_code = res;
-    }
-    if (flag == 0) {
-      setInterval(
-        function() {
-          sockets.inner.get(query_code, function(resData1, jwres) {
-            for (let i = 0; i < resData1.sim.length; i++) {
-              let latii = resData1.sim[i].latitude
-              let longi = resData1.sim[i].longitude
-              let text1i = resData1.sim[i].tweet_text
-              let imgi = resData1.sim[i].image_physical_location
-              let aidri = resData1.sim[i].aidr_class_label
-              let sentimenti = resData1.sim[i].sentiment
-              let severityi = resData1.sim[i].image_damage_class
-              let txt1 = text1i;
-              // same as linkify function
-              function linkify1(tweet) {
-                var link_index = tweet.lastIndexOf('https://');
-                var tweet_words = tweet.substring(link_index);
-                tweet_words = tweet_words.split(" ");
-                var link = tweet_words[0].replace(/['"]+/g, '');
-                return '<a href="' + link + '" target="' + '_blank' + '"">' + link + '</a>';;
-              }
-              let ai = linkify1(txt1);
-              let sentii = '';
-              let aidi = '';
-              aidi = labelize(aidri);
-              let tweet_marker = lazyMarkers(aidi, sentimenti);
-              var popup1 = L.popup();
-              // same as onMapClick function
-              function onMapClick1() {
-                popup1
-                  .setLatLng([longi, latii])
-                  .setContent('<p>' + ai + '</p>' + "<a target='" + '_blank' + "' href='" + imgi + "'><img class='size'  src='" + imgi + "'/></a>" + '<p>' + '<b>' + locals.display_aidr + '</b>' + aidi + '</p>' +
-                    '<p>' + '<b>' + locals.display_sentiment + '</b>' + sentimenti + '</p>' + '<p>' + '<b>' + locals.display_severity + '</b>' + severityi + '</p>')
-                  .addTo(map);
-              }
-              // same as onMapClick2 function
-              function onMapClick21() {
-                popup1
-                  .setLatLng([longi, latii])
-                  .setContent('<p>' + ai + '</p>' + '<p>' + '<b>' + locals.display_aidr + '</b>' + aidi + '</p>' + '<p>' + '<b>' + locals.display_sentiment + '</b>' + sentimenti + '</p>' +
-                    '<p>' + '<b>' + locals.display_severity + '</b>' + severityi + '</p>')
-                  .addTo(map);
-              }
-              // same process here with markeres created for image and without image
-              if (severityi == ('None')) {
-                if (imgi == '') {
-                  littlei = new L.marker([longi, latii], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  littlei.on('click', onMapClick21);
-                } else {
-                  little1i = new L.marker([longi, latii], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little1i.on('click', onMapClick1);
-                }
-              } else if (severityi == 'Mild') {
-                if (imgi == '') {
-                  little2i = new L.marker([longi, latii], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little2i.on('click', onMapClick21);
-                } else {
-                  little3i = new L.marker([longi, latii], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little3i.on('click', onMapClick1);
-                }
-              } else if (severityi == 'Severe') {
-                if (imgi == '') {
-                  little4i = new L.marker([longi, latii], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little4i.on('click', onMapClick21);
-                } else {
-                  little5i = new L.marker([longi, latii], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little5i.on('click', onMapClick1);
-                }
-              } else if (severity == 'Minor') {
-                if (img == '') {
-                  little41 = new L.marker([long, lati], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little41.on('click', onMapClick2);
-                } else {
-                  little51 = new L.marker([long, lati], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little51.on('click', onMapClick);
-                }
-              } else if (severity == 'Moderate') {
-                if (img == '') {
-                  little42 = new L.marker([long, lati], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little42.on('click', onMapClick2);
-                } else {
-                  little52 = new L.marker([long, lati], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little52.on('click', onMapClick);
-                }
-              } else if (severity == 'Major') {
-                if (img == '') {
-                  little43 = new L.marker([long, lati], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little43.on('click', onMapClick2);
-                } else {
-                  little53 = new L.marker([long, lati], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little53.on('click', onMapClick);
-                }
-              } else {
-                if (imgi == '') {
-                  little6i = new L.marker([longi, latii], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little6i.on('click', onMapClick21);
-                } else {
-                  little7i = new L.marker([longi, latii], {
-                    icon: tweet_marker
-                  }).addTo(mcg);
-                  little7i.on('click', onMapClick1);
-                }
-              }
-            }
-            // ensure querying is done on new markers onle
-            if (resData1.sim.length != 0) {
-              let createtime2 = resData1.sim[0].createtime;
-              let vep1 = query_code;
-              var n1 = vep1.indexOf("q8");
-              var res1 = vep1.replace(vep1.substring(n1 + 3), createtime2);
-              query_code = res1;
-            }
-          });
-        }, 5000);
-      // every 5 seconds the realtime aspect is done (e.g. refresh page 5 seconds wihtout any blinking)
-    }
-  });
+  }, 5000);
 }
 
 function dyrender(s1, s2, s3) {
@@ -766,11 +531,11 @@ function task(e) {
     "demon1").innerHTML + '&q12=' + document.getElementById("demon2").innerHTML + '&q8=' + 'xyz';
   query_code = '/tweets/filteror?q1=' + query1 + '&q2=' + query2 + '&q3=' + query3 + '&q4=' + query4 + '&q5=' + 1 + '&q7=' + 1 + '&q9=' + packet.collection_code + '&q10=' + document.getElementById("demon").innerHTML + '&q11=' + document.getElementById(
     "demon1").innerHTML + '&q12=' + document.getElementById("demon2").innerHTML + '&q8=' + 'xyz';
-  get1(qu, 0);
+  tweet_loader(qu, 0);
 }
 //<!-- Load the slider  -->
 window.onload = function() {
-  get1('/tweets/filteror?q1=' + '' + '&q2=' + '' + '&q3=' + '' + '&q4=' + '' + '&q5=' + 0 + '&q7=' + 0 + '&q9=' + packet.collection_code + '&q10=' + document.getElementById("demon").innerHTML + '&q11=' + document.getElementById("demon1").innerHTML +
+  tweet_loader('/tweets/filteror?q1=' + '' + '&q2=' + '' + '&q3=' + '' + '&q4=' + '' + '&q5=' + 0 + '&q7=' + 0 + '&q9=' + packet.collection_code + '&q10=' + document.getElementById("demon").innerHTML + '&q11=' + document.getElementById("demon1").innerHTML +
     '&q12=' + document.getElementById("demon2").innerHTML + '&q8=' + 'xyz', 1);
 }
 
